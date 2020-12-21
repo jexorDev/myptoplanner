@@ -333,19 +333,28 @@ export default {
       this.step++;
     },
     savePlan() {
-      const userData = {
-        dateOfHire: this.hireDate,
-        plans: [
-          {
-            name: `${this.planYear} - ${this.planName}`,
-            created: moment(),
-            year: this.planYear,
-            hoursToRollover: this.rolloverHours,
-            hoursBankedPrior: this.bankedPto,
-          },
-        ],
-      };
-      localStorage.setItem("userData", JSON.stringify(userData));
+      this.$store.dispatch("setHireDate", this.hireDate);
+      this.$store.dispatch("addPlan", {
+        name: `${this.planYear} - ${this.planName}`,
+        created: moment(),
+        year: this.planYear,
+        hoursToRollover: this.rolloverHours,
+        hoursBankedPrior: this.bankedPto,
+      });
+
+      // const userData = {
+      //   dateOfHire: this.hireDate,
+      //   plans: [
+      //     {
+      //       name: `${this.planYear} - ${this.planName}`,
+      //       created: moment(),
+      //       year: this.planYear,
+      //       hoursToRollover: this.rolloverHours,
+      //       hoursBankedPrior: this.bankedPto,
+      //     },
+      //   ],
+      // };
+      //localStorage.setItem("userData", JSON.stringify(userData));
     },
   },
 };
