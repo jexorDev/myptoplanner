@@ -17,24 +17,37 @@
 
       <v-stepper-items>
         <v-stepper-content step="1">
-          <h1>Welcome!</h1>
-          <div>
-            This tool will help you plan out your PTO. Since this is your first
-            visit, we will need some information to calculate your PTO before
-            you can make a plan.
-          </div>
-          <v-btn color="primary" @click="step = 2"> Continue </v-btn>
-
-          <v-btn text> Cancel </v-btn>
+          <v-row>
+            <v-col>
+              <div class="display-2">Welcome!</div>
+              <div>
+                This tool will help you plan out your PTO. Since this is your
+                first visit, we will need some information to calculate your PTO
+                before you can make a plan.
+              </div>
+            </v-col>
+          </v-row>
+          <v-row class="mt-4">
+            <v-col class="d-flex justify-space-between">
+              <v-btn color="primary" @click="step--">
+                <v-icon>mdi-chevron-left</v-icon>Previous</v-btn
+              >
+              <v-btn color="primary" @click="step++"
+                >Next<v-icon>mdi-chevron-right</v-icon></v-btn
+              >
+            </v-col>
+          </v-row>
         </v-stepper-content>
 
         <v-stepper-content step="2">
-          <div>
-            To calculate how many hours of PTO youw will recieve this year,
-            please enter your date of hire:
-          </div>
           <v-row>
-            <v-col :cols="3">
+            <v-col cols="4">
+              Date of hire
+              <div class="font-weight-light">
+                This is used to calculate how many hours of PTO you will receive
+              </div>
+            </v-col>
+            <v-col>
               <v-menu
                 ref="hireDateMenu"
                 v-model="showHireDateMenu"
@@ -50,6 +63,7 @@
                     label="Date of Hire"
                     hint="MM/DD/YYYY"
                     prepend-icon="mdi-calendar"
+                    style="width: 200px"
                     v-bind="attrs"
                     @blur="hireDate = parseDate(hireDateFormatted)"
                     v-on="on"
@@ -62,66 +76,137 @@
                 ></v-date-picker>
               </v-menu>
             </v-col>
-            <v-col :cols="9"> </v-col>
+            <v-col></v-col>
           </v-row>
 
-          <v-btn color="primary" @click="moveToCreatePlanStep">
-            Continue
-          </v-btn>
-
-          <v-btn text @click="step = 1"> Cancel </v-btn>
+          <v-row class="mt-4">
+            <v-col class="d-flex justify-space-between">
+              <v-btn color="primary" @click="step--">
+                <v-icon>mdi-chevron-left</v-icon>Previous</v-btn
+              >
+              <v-btn color="primary" @click="moveToCreatePlanStep"
+                >Next<v-icon>mdi-chevron-right</v-icon></v-btn
+              >
+            </v-col>
+          </v-row>
         </v-stepper-content>
 
         <v-stepper-content step="3">
           <v-row>
-            <v-col>
-              What year are you planning your PTO for?
-              <v-select :items="planYears" v-model="planYear"></v-select>
+            <v-col cols="4">
+              <div>What year are you planning your PTO for?</div>
             </v-col>
-            <v-col>
-              How many hours did you enter {{ planYear }} with?
-              <v-icon>mdi-information-outline</v-icon>
-              <v-text-field></v-text-field>
+            <v-col cols="1">
+              <v-select
+                :items="planYears"
+                v-model="planYear"
+                label="Plan Year"
+              ></v-select>
             </v-col>
-            <v-col>
-              How many hours would you like to rollover to {{ planYear + 1 }}?
+            <v-col></v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="4">
+              <div>How many hours did you enter {{ planYear }} with?</div>
+              <div class="font-weight-light">
+                This can be found on any of your {{ planYear }} pay stubs as
+                "Banked PTO Hrs"
+              </div>
+            </v-col>
+            <v-col cols="1">
+              <v-text-field
+                v-model="bankedPto"
+                type="number"
+                label="Banked PTO"
+              ></v-text-field>
+            </v-col>
+            <v-col></v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="4">
+              <div>
+                How many hours would you like to rollover to {{ planYear + 1 }}?
+              </div>
+              <div class="font-weight-light mb-2">
+                {{ maxRolloverHoursSliderInfo }}
+              </div>
+            </v-col>
+            <v-col cols="5">
               <v-slider
                 v-model="rolloverHours"
                 :max="maxRolloverHours"
                 :min="0"
                 :thumb-label="true"
-                :hint="maxRolloverHoursSliderHint"
-              ></v-slider>
+                :step="0.25"
+                inverse-label
+              >
+                <template v-slot:append>
+                  <v-text-field
+                    v-model="rolloverHours"
+                    class="mt-0 pt-0"
+                    type="number"
+                    style="width: 60px"
+                    readonly
+                  ></v-text-field>
+                </template>
+              </v-slider>
             </v-col>
+            <v-col></v-col>
           </v-row>
+
           <v-row>
-            <v-col>
+            <v-col cols="4">
               <div>
-                Give your plan a name (you can have multiple plans for the same
-                year)
-                <v-text-field
-                  v-model="planName"
-                  label="Plan Name"
-                  hide-details="auto"
-                ></v-text-field>
+                Give your plan a name
+                <div class="font-weight-light">
+                  You may have multiple plans for the same year. This helps to
+                  distinguish those.
+                </div>
               </div>
             </v-col>
+            <v-col>
+              <v-text-field
+                v-model="planName"
+                label="Plan Name"
+                hide-details="auto"
+                :prefix="`${planYear} - `"
+                :placeholder="`ex: My ${planYear} plan with trips to Gulf Shores and Orlando!`"
+              ></v-text-field>
+            </v-col>
           </v-row>
 
-          <v-btn color="primary" @click="moveToReviewStep"> Continue </v-btn>
-
-          <v-btn text @click="step = 2"> Cancel </v-btn>
+          <v-row class="mt-4">
+            <v-col class="d-flex justify-space-between">
+              <v-btn color="primary" @click="step--">
+                <v-icon>mdi-chevron-left</v-icon>Previous</v-btn
+              >
+              <v-btn color="primary" @click="moveToReviewStep"
+                >Next<v-icon>mdi-chevron-right</v-icon></v-btn
+              >
+            </v-col>
+          </v-row>
         </v-stepper-content>
         <v-stepper-content step="4">
+          <v-row>
+            <v-col>
+              <div class="display-1">{{ planName }}</div>
+            </v-col>
+          </v-row>
           <v-row v-if="ptoBreakdown">
             <v-col>
               <v-timeline dense v-if="ptoBreakdown">
+                <v-timeline-item right small>
+                  You entered {{ planYear }} with a Banked PTO balance of
+                  <span class="primary--text">{{ bankedPto }}</span>
+                  hours</v-timeline-item
+                >
                 <v-timeline-item right small>
                   You will accrue
                   <span class="primary--text">{{
                     ptoBreakdown.totalHours
                   }}</span>
-                  this year</v-timeline-item
+                  hours this year</v-timeline-item
                 >
                 <v-timeline-item right small>
                   You are rolling over
@@ -131,12 +216,17 @@
                 <v-timeline-item right small>
                   You need to use
                   <span class="primary--text">{{ hoursToUse }}</span>
-                  hours prior to 12/31/{{ planYear }}</v-timeline-item
+                  hours prior to January 1, {{ planYear + 1 }}</v-timeline-item
                 >
+                <v-timeline-item right small v-if="rolloverHours > 0">
+                  Your starting Banked PTO balance in {{ planYear + 1 }} will be
+                  <span class="primary--text">{{ nextYearBankedPto }}</span>
+                </v-timeline-item>
               </v-timeline>
             </v-col>
             <v-col>
-              <h3>PTO Rate Effective Dates</h3>
+              <div>PTO Rate Effective Dates</div>
+
               <v-simple-table v-if="ptoBreakdown.breakdown.length > 0">
                 <template v-slot:default>
                   <thead>
@@ -161,8 +251,17 @@
                 </template>
               </v-simple-table>
             </v-col>
-
-            <v-btn text @click="step--"> Cancel </v-btn>
+          </v-row>
+          <v-row class="mt-4">
+            <v-col class="d-flex justify-space-between">
+              <v-btn color="primary" @click="step--">
+                <v-icon>mdi-chevron-left</v-icon>Previous</v-btn
+              >
+              <v-btn color="primary" outlined @click="savePlan"
+                ><v-icon class="mr-1">mdi-check-circle-outline</v-icon>Save and
+                begin planning PTO</v-btn
+              >
+            </v-col>
           </v-row>
         </v-stepper-content>
       </v-stepper-items>
@@ -192,6 +291,7 @@ export default {
     planYears: [moment().year(), moment().year() + 1],
     rolloverHours: 0,
     maxRolloverHours: 0,
+    bankedPto: 0,
   }),
   computed: {
     hoursToUse: function () {
@@ -199,8 +299,11 @@ export default {
         ? this.ptoBreakdown.totalHours - this.rolloverHours
         : 0;
     },
-    maxRolloverHoursSliderHint: function () {
+    maxRolloverHoursSliderInfo: function () {
       return `With your years of service, you may roll over a maxiumum of ${this.maxRolloverHours} hours`;
+    },
+    nextYearBankedPto: function () {
+      return parseFloat(this.bankedPto) + parseFloat(this.rolloverHours);
     },
   },
   watch: {
@@ -228,6 +331,21 @@ export default {
     moveToReviewStep() {
       this.ptoBreakdown = getPtoBreakdown(this.hireDate, this.planYear);
       this.step++;
+    },
+    savePlan() {
+      const userData = {
+        dateOfHire: this.hireDate,
+        plans: [
+          {
+            name: `${this.planYear} - ${this.planName}`,
+            created: moment(),
+            year: this.planYear,
+            hoursToRollover: this.rolloverHours,
+            hoursBankedPrior: this.bankedPto,
+          },
+        ],
+      };
+      localStorage.setItem("userData", JSON.stringify(userData));
     },
   },
 };

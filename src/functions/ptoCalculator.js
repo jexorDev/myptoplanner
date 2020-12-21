@@ -58,10 +58,6 @@ export function getPtoBreakdown(hireDate, planYear) {
 
     let breakdown = [];
 
-    console.log(totalPtoHoursPriorAnniversary)
-    console.log(totalPtoHoursAfterAnniversary)
-
-
     if (ptoHoursPerPayPriorAnniversary === ptoHoursPerPayAfterAnniversary) {
         //no change in accrual this year
         breakdown.push({

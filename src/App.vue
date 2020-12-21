@@ -5,18 +5,11 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+      <v-select v-if="plans" :items="plans" v-model="selectedPlan"></v-select>
     </v-app-bar>
 
     <v-main>
-      <v-container>
+      <v-container fluid>
         <InitializeWizard></InitializeWizard>
       </v-container>
     </v-main>
@@ -32,9 +25,19 @@ export default {
   components: {
     InitializeWizard,
   },
-
   data: () => ({
-    //
+    plans: [],
+    selectedPlan: "",
   }),
+  created: function () {
+    const userDataFromStorage = localStorage.getItem("userData");
+
+    if (userDataFromStorage) {
+      const userData = JSON.parse(userDataFromStorage);
+
+      this.plans = userData.plans.map((plan) => plan.name);
+      this.selectedPlan = this.plans[0];
+    }
+  },
 };
 </script>
