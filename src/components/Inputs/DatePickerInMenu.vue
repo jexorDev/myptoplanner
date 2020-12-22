@@ -13,8 +13,8 @@
         v-model="selectedDateFormatted"
         :label="label"
         hint="MM/DD/YYYY"
-        prepend-icon="mdi-calendar"
-        style="width: 200px"
+        :prepend-icon="showIcon ? 'mdi-calendar' : ''"
+        style="width: 150px"
         v-bind="attrs"
         @blur="setSelectedDate"
         @keydown="showMenu = false"
@@ -36,6 +36,11 @@ export default {
   props: {
     label: String,
     selectedDate: String,
+    showIcon: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
   },
   mounted() {
     this.selectedDateFormatted = formatDate(this.selectedDate);
