@@ -48,35 +48,33 @@
               </div>
             </v-col>
             <v-col>
-              <v-menu
-                ref="hireDateMenu"
-                v-model="showHireDateMenu"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="hireDateFormatted"
-                    label="Date of Hire"
-                    hint="MM/DD/YYYY"
-                    prepend-icon="mdi-calendar"
-                    style="width: 200px"
-                    v-bind="attrs"
-                    @blur="hireDate = parseDate(hireDateFormatted)"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  v-model="hireDate"
-                  no-title
-                  @input="showHireDateMenu = false"
-                ></v-date-picker>
-              </v-menu>
+              <DatePickerInMenu
+                label="Date of Hire"
+                :selectedDate.sync="hireDate"
+              ></DatePickerInMenu>
             </v-col>
             <v-col></v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="4">
+              <v-checkbox
+                v-model="isDeveloper"
+                label="I'm a developer"
+              ></v-checkbox>
+              <div v-if="isDeveloper" class="font-weight-light">
+                Please enter a date that your flex day lands on. If you do not
+                participate in flex scheduling, please leave this box unchecked.
+              </div>
+            </v-col>
+            <v-col>
+              <div v-if="isDeveloper">
+                <DatePickerInMenu
+                  label="Flex Day"
+                  :selectedDate.sync="flexDayReferenceDate"
+                ></DatePickerInMenu>
+              </div>
+            </v-col>
           </v-row>
 
           <v-row class="mt-4">
@@ -270,21 +268,23 @@
 </template>
 
 <script>
+import DatePickerInMenu from "@/components/Inputs/DatePickerInMenu";
 import { getPtoBreakdown, getRolloverMax } from "@/functions/ptoCalculator";
+import { getIsoDateString } from "@/functions/dateHelpers";
 import moment from "moment";
 
 export default {
   name: "InitializeWizard",
-
-  data: (vm) => ({
+  components: {
+    DatePickerInMenu,
+  },
+  data: () => ({
     step: 1,
     hireDate: moment({ month: 3, day: 18, year: 2015 })
       .toISOString()
       .substring(0, 10),
-    hireDateFormatted: vm.formatDate(
-      moment({ month: 3, day: 18, year: 2015 }).toISOString().substring(0, 10)
-    ),
-    showHireDateMenu: false,
+    isDeveloper: false,
+    flexDayReferenceDate: getIsoDateString(moment()),
     ptoBreakdown: null,
     planName: "",
     planYear: moment().year(),
@@ -306,24 +306,7 @@ export default {
       return parseFloat(this.bankedPto) + parseFloat(this.rolloverHours);
     },
   },
-  watch: {
-    hireDate() {
-      this.hireDateFormatted = this.formatDate(this.hireDate);
-    },
-  },
   methods: {
-    formatDate(date) {
-      if (!date) return null;
-
-      const [year, month, day] = date.split("-");
-      return `${month}/${day}/${year}`;
-    },
-    parseDate(date) {
-      if (!date) return null;
-
-      const [month, day, year] = date.split("/");
-      return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-    },
     moveToCreatePlanStep() {
       this.maxRolloverHours = getRolloverMax(this.hireDate, this.planYear);
       this.step++;
@@ -341,20 +324,6 @@ export default {
         hoursToRollover: this.rolloverHours,
         hoursBankedPrior: this.bankedPto,
       });
-
-      // const userData = {
-      //   dateOfHire: this.hireDate,
-      //   plans: [
-      //     {
-      //       name: `${this.planYear} - ${this.planName}`,
-      //       created: moment(),
-      //       year: this.planYear,
-      //       hoursToRollover: this.rolloverHours,
-      //       hoursBankedPrior: this.bankedPto,
-      //     },
-      //   ],
-      // };
-      //localStorage.setItem("userData", JSON.stringify(userData));
     },
   },
 };

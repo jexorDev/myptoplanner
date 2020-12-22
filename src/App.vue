@@ -79,16 +79,7 @@
           <v-tab-item>
             <v-card flat>
               <v-card-text>
-                <v-btn fab text small color="grey darken-2">
-                  <v-icon small> mdi-chevron-left </v-icon>
-                </v-btn>
-                <v-btn fab text small color="grey darken-2">
-                  <v-icon small> mdi-chevron-right </v-icon>
-                </v-btn>
-                <v-toolbar-title v-if="$refs.calendar">
-                  {{ $refs.calendar.title }}
-                </v-toolbar-title>
-                <v-calendar ref="calendar" type="month"></v-calendar>
+                <PlannerParent></PlannerParent>
               </v-card-text>
             </v-card>
           </v-tab-item>
@@ -122,12 +113,14 @@
 
 <script>
 import InitializeWizard from "./components/InitializeWizard";
+import PlannerParent from "@/components/PtoPlanning/PlannerParent";
 
 export default {
   name: "App",
 
   components: {
     InitializeWizard,
+    PlannerParent,
   },
   data: () => ({
     selectedPlan: "",
