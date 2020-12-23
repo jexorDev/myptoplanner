@@ -16,8 +16,14 @@
             </v-btn>
           </v-toolbar>
         </v-sheet>
-        <v-sheet>
-          <v-calendar ref="calendar" type="month" v-model="focus"></v-calendar>
+        <v-sheet :height="600">
+          <v-calendar
+            ref="calendar"
+            type="month"
+            v-model="focus"
+            :events="events"
+            :event-color="getEventColor"
+          ></v-calendar>
         </v-sheet>
       </v-col>
     </v-row>
@@ -34,17 +40,41 @@ export default {
   }),
   props: {
     planYear: Number,
+    ptoDates: Array,
+    holidays: Array,
+    flexDays: Array,
+    payDays: Array,
   },
   mounted() {
     this.$refs.calendar.checkChange();
   },
-  computed: {},
+  computed: {
+    events: function () {
+      return [
+        ...this.ptoDates.map((ptoDate) => ({
+          name: `Usage: ${ptoDate.hours} hrs`,
+          start: ptoDate.date,
+          color: "green",
+          timed: false,
+        })),
+        ...this.holidays.map((holiday) => ({
+          name: holiday.description,
+          start: holiday.date,
+          color: "red",
+          timed: false,
+        })),
+      ];
+    },
+  },
   methods: {
     prev() {
       this.$refs.calendar.prev();
     },
     next() {
       this.$refs.calendar.next();
+    },
+    getEventColor(event) {
+      return event.color;
     },
   },
 };

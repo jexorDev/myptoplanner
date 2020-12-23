@@ -13,7 +13,11 @@
           outlined
           dense
           class="mt-2"
-        ></v-select>
+        >
+          <template v-slot:append-item>
+            <v-btn color="primary" text>Add Plan</v-btn>
+          </template>
+        </v-select>
       </div>
     </v-app-bar>
 
@@ -131,7 +135,7 @@ export default {
       return this.$store.getters.planNames;
     },
     totalPlannedPtoHours: function () {
-      return this.$store.getters.plannedPtoTotal;
+      return 60;
     },
     percentagePlannedPto: function () {
       return (parseFloat(this.totalPlannedPtoHours) / this.hoursToUse) * 100;
@@ -143,6 +147,9 @@ export default {
         this.selectedPlan = this.plans[0];
       }
     },
+    selectedPlan() {
+      this.$store.dispatch("setSelectedPlan", this.selectedPlan);
+    },
   },
   created: function () {
     const stateFromStorage = localStorage.getItem("state");
@@ -151,10 +158,6 @@ export default {
       const state = JSON.parse(stateFromStorage);
       this.$store.dispatch("setState", state);
     }
-
-    // if (this.plans.length > 0) {
-    //   this.selectedPlan = this.plans[0];
-    // }
   },
 };
 </script>
