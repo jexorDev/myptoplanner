@@ -29,16 +29,7 @@ export default {
     totalHoursToPlan: 0,
   }),
   mounted: function () {
-    const plan = this.$store.state.plans.find(
-      (plan) => plan.name === this.$store.getters.selectedPlan
-    );
-
-    if (!plan) return;
-
-    this.totalHoursToPlan = getPtoBreakdown(
-      this.$store.getters.userInfo.dateOfHire,
-      plan.year
-    ).totalHours;
+    this.setTotalHoursToPlan();
   },
   computed: {
     totalPtoPlanned: function () {
@@ -56,6 +47,28 @@ export default {
       return this.totalHoursToPlan > 0
         ? (this.totalPtoPlanned / this.totalHoursToPlan) * 100
         : 0;
+    },
+    selectedPlan: function () {
+      return this.$store.getters.selectedPlan;
+    },
+  },
+  watch: {
+    selectedPlan() {
+      this.setTotalHoursToPlan();
+    },
+  },
+  methods: {
+    setTotalHoursToPlan() {
+      const plan = this.$store.state.plans.find(
+        (plan) => plan.name === this.$store.getters.selectedPlan
+      );
+
+      if (!plan) return;
+
+      this.totalHoursToPlan = getPtoBreakdown(
+        this.$store.getters.userInfo.dateOfHire,
+        plan.year
+      ).totalHours;
     },
   },
 };

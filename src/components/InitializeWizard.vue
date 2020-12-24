@@ -255,7 +255,7 @@
               <v-btn color="primary" @click="step--">
                 <v-icon>mdi-chevron-left</v-icon>Previous</v-btn
               >
-              <v-btn color="primary" outlined @click="savePlan"
+              <v-btn color="success" outlined @click="savePlan"
                 ><v-icon class="mr-1">mdi-check-circle-outline</v-icon>Save and
                 begin planning PTO</v-btn
               >
@@ -327,6 +327,7 @@ export default {
         hoursToRollover: this.rolloverHours,
         hoursBankedPrior: this.bankedPto,
       });
+      this.$router.push({ path: "/" });
     },
   },
 };
