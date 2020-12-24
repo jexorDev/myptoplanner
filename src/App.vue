@@ -38,13 +38,13 @@
             <v-list-item-title>Dashboard</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/plan">
+        <v-list-item link to="/planner">
           <v-list-item-icon>
             <v-icon>mdi-calendar</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>Plan</v-list-item-title>
+            <v-list-item-title>Planner</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item link to="/settings">
@@ -70,22 +70,18 @@
 export default {
   name: "App",
 
-  data: () => ({
-    selectedPlan: "",
-  }),
+  data: () => ({}),
   computed: {
-    plans: function () {
+    plans() {
       return this.$store.getters.planNames;
     },
-  },
-  watch: {
-    plans(newPlans, oldPlans) {
-      if (oldPlans.length === 0 && newPlans.length > 0) {
-        this.selectedPlan = this.plans[0];
-      }
-    },
-    selectedPlan() {
-      this.$store.dispatch("setSelectedPlan", this.selectedPlan);
+    selectedPlan: {
+      get() {
+        return this.$store.getters.selectedPlan;
+      },
+      set(value) {
+        this.$store.dispatch("setSelectedPlan", value);
+      },
     },
   },
   created: function () {
@@ -97,7 +93,12 @@ export default {
     }
 
     if (this.$store.state.plans.length === 0) {
-      this.$router.push({ path: "/start" });
+      if (this.$route.name !== "Start") {
+        this.$router.push({ path: "/start" });
+      }
+    } else {
+      this.selectedPlan = this.$store.state.plans[0].name;
+      this.$store.dispatch("setSelectedPlan", this.selectedPlan);
     }
   },
 };

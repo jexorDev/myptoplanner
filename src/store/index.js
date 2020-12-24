@@ -14,15 +14,20 @@ export default new Vuex.Store({
   },
   mutations: {
     setState(state, payload) {
+      state.selectedPlan = payload.plans ? payload.plans[0] : "";
       state.dateOfHire = payload.dateOfHire;
+      state.isDeveloper = payload.isDeveloper;
+      state.flexDayReferenceDate = payload.flexDayReferenceDate;
       state.plans = [...payload.plans];
       state.ptoDates = [...payload.ptoDates];
     },
     setSelectedPlan(state, payload) {
       state.selectedPlan = payload;
     },
-    setHireDate(state, hireDate) {
-      state.dateOfHire = hireDate;
+    setUserInfo(state, payload) {
+      state.dateOfHire = payload.dateOfHire;
+      state.isDeveloper = payload.isDeveloper;
+      state.flexDayReferenceDate = payload.flexDayReferenceDate;
     },
     setPlans(state, payload) {
       state.plans = [...payload];
@@ -38,12 +43,21 @@ export default new Vuex.Store({
     setSelectedPlan({ commit }, payload) {
       commit('setSelectedPlan', payload);
     },
-    setHireDate({ commit, state }, payload) {      
-      commit('setHireDate', payload);
+    setUserInfo({ commit, state }, payload) {      
+      commit('setUserInfo', payload);
       localStorage.setItem('state', JSON.stringify(state));
     },
     addPlan({ commit, state }, payload) {
       commit('setPlans', [...state.plans, payload]);
+      localStorage.setItem('state', JSON.stringify(state));
+    },
+    updatePlan({ commit, state }, payload) {
+      const existingPlans = state.plans.filter(plan => plan.name !== payload.originalName);
+      commit('setPlans', [...existingPlans, payload.updatedPlan]);
+      localStorage.setItem('state', JSON.stringify(state));
+    },
+    deletePlan({ commit, state }, payload) {
+      commit('setPlans', [state.plans.filter(plan => plan.name !== payload)]);  
       localStorage.setItem('state', JSON.stringify(state));
     },
     addPtoDates({ commit, state }, payload) {
@@ -61,6 +75,11 @@ export default new Vuex.Store({
       commit('setPtoDates', [...state.ptoDates.filter(ptoDate => ptoDate.planName !== payload.planName && ptoDate.date !== payload.date)] )
       localStorage.setItem('state', JSON.stringify(state));
 
+    },
+    deleteAccount({ commit }) {
+      commit('setState', {});
+      localStorage.removeItem('state');
+      
     }
   },
   getters: {

@@ -113,7 +113,7 @@ import {
 import moment from "moment";
 
 export default {
-  name: "PlannerParent",
+  name: "Planner",
   components: {
     PlannerCalendar,
     DatePickerInMenu,
