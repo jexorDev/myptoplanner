@@ -93,7 +93,9 @@
         <div v-show="viewType === 'list'"></div>
       </v-col>
       <v-col>
-        <WidgetHoursRemaining></WidgetHoursRemaining>
+        <div class="mt-3">
+          <WidgetHoursRemaining></WidgetHoursRemaining>
+        </div>
       </v-col>
     </v-row>
   </div>

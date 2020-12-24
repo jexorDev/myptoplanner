@@ -43,7 +43,7 @@ export default new Vuex.Store({
       localStorage.setItem('state', JSON.stringify(state));
     },
     addPlan({ commit, state }, payload) {
-      commit('addPlan', [...state.plans, payload]);
+      commit('setPlans', [...state.plans, payload]);
       localStorage.setItem('state', JSON.stringify(state));
     },
     addPtoDates({ commit, state }, payload) {

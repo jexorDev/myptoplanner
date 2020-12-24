@@ -51,34 +51,7 @@
           </v-tab>
 
           <v-tab-item>
-            <v-card flat>
-              <v-card-text>
-                <v-row>
-                  <v-col cols="4">
-                    <v-card>
-                      <v-card-title class="headline"
-                        >Planned hours</v-card-title
-                      >
-                      <v-card-text>
-                        <v-progress-circular
-                          :rotate="-90"
-                          :size="100"
-                          :width="15"
-                          :value="percentagePlannedPto"
-                          color="pink"
-                        >
-                          {{ totalPlannedPtoHours }}
-                        </v-progress-circular>
-                        <div class="outline">
-                          {{ totalPlannedPtoHours }} of 158 hours PTO planned
-                        </div>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                  <v-col> </v-col>
-                </v-row>
-              </v-card-text>
-            </v-card>
+            <Dashboard></Dashboard>
           </v-tab-item>
           <v-tab-item>
             <v-card flat>
@@ -116,7 +89,8 @@
 </template>
 
 <script>
-import InitializeWizard from "./components/InitializeWizard";
+import InitializeWizard from "@/components/InitializeWizard";
+import Dashboard from "@/components/Dashboard";
 import PlannerParent from "@/components/PtoPlanning/PlannerParent";
 
 export default {
@@ -124,11 +98,13 @@ export default {
 
   components: {
     InitializeWizard,
+    Dashboard,
     PlannerParent,
   },
   data: () => ({
     selectedPlan: "",
     hoursToUse: 150,
+    links: ["Give Feedback", "Report a Bug", "Contribute"],
   }),
   computed: {
     plans: function () {

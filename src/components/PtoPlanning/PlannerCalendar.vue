@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row class="fill-height">
+    <v-row class="fill-height" no-gutters>
       <v-col>
         <v-sheet>
           <v-toolbar flat>
