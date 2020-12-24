@@ -269,7 +269,10 @@
 
 <script>
 import DatePickerInMenu from "@/components/Inputs/DatePickerInMenu";
-import { getPtoBreakdown, getRolloverMax } from "@/functions/ptoCalculator";
+import {
+  getPtoBreakdown,
+  getRolloverMax,
+} from "@/functions/employeeInfoCalculator";
 import { getIsoDateString } from "@/functions/dateHelpers";
 import moment from "moment";
 

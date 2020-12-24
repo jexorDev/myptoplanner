@@ -42,7 +42,7 @@
           <div class="d-flex justify-start">
             <div style="width: 110px" class="mt-3">
               <DatePickerInMenu
-                label="From"
+                label="Day"
                 :selectedDate.sync="singleEntryDate"
                 :showIcon="false"
               ></DatePickerInMenu>
@@ -83,16 +83,23 @@
     <v-divider></v-divider>
     <v-row>
       <v-col cols="9">
-        <PlannerCalendar
-          :ptoDates="ptoDates"
-          :holidays="holidays"
-        ></PlannerCalendar>
+        <div v-show="viewType === 'calendar'">
+          <PlannerCalendar
+            :ptoDates="ptoDates"
+            :holidays="holidays"
+            @delete-pto="deletePto"
+          ></PlannerCalendar>
+        </div>
+        <div v-show="viewType === 'list'"></div>
       </v-col>
-      <v-col> </v-col>
+      <v-col>
+        <WidgetHoursRemaining></WidgetHoursRemaining>
+      </v-col>
     </v-row>
   </div>
 </template>
 <script>
+import WidgetHoursRemaining from "@/components/widgets/WidgetHoursRemaining";
 import PlannerCalendar from "@/components/PtoPlanning/PlannerCalendar";
 import DatePickerInMenu from "@/components/Inputs/DatePickerInMenu";
 import { getIsoDateString } from "@/functions/dateHelpers";
@@ -108,6 +115,7 @@ export default {
   components: {
     PlannerCalendar,
     DatePickerInMenu,
+    WidgetHoursRemaining,
   },
   data: () => ({
     viewType: "calendar",
@@ -156,7 +164,7 @@ export default {
           this.singleEntryDate,
           this.$store.getters.userInfo.isDeveloper,
           this.singleEntryIsAllDay,
-          this.singleEntryHours
+          parseFloat(this.singleEntryHours)
         );
       } else {
         ptoDays = getPtoDaysForRange(
@@ -166,9 +174,15 @@ export default {
         );
       }
 
-      this.$store.dispatch("addPto", {
-        planName: this.$store.getters.selectedPlan.name,
+      this.$store.dispatch("addPtoDates", {
+        planName: this.$store.getters.selectedPlan,
         pto: ptoDays,
+      });
+    },
+    deletePto(date) {
+      this.$store.dispatch("deletePtoDates", {
+        planName: this.$store.getters.selectedPlan,
+        date: date,
       });
     },
   },
