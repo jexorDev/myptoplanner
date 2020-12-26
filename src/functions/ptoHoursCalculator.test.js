@@ -1,5 +1,5 @@
-import {getPtoDays} from "./ptoHoursCalculator";
+import {getPtoDaysForRange} from "./ptoHoursCalculator";
 
 test('weekend', () => {
-  expect(getPtoDays("12/11/2020", "12/15/2020",  ["12/14/2020"], ["12/11/2020"])).toContain("12/15/2020");
+  expect(getPtoDaysForRange("12/11/2020", "12/15/2020",  false)).toContain("2020-12-15");
 });

@@ -82,7 +82,7 @@ export default {
         ...this.ptoDates.map((ptoDate) => ({
           name: `Usage: ${ptoDate.hours} hrs`,
           start: ptoDate.date,
-          color: "green",
+          color: "purple",
           timed: false,
           type: "pto",
         })),
@@ -92,6 +92,20 @@ export default {
           color: "red",
           timed: false,
           type: "holiday",
+        })),
+        ...this.flexDays.map((flexDay) => ({
+          name: "Flex Day",
+          start: flexDay,
+          color: "blue",
+          timed: false,
+          type: "flex",
+        })),
+        ...this.payDays.map((payDay) => ({
+          name: "Add",
+          start: payDay,
+          color: "green",
+          timed: false,
+          type: "add",
         })),
       ];
     },

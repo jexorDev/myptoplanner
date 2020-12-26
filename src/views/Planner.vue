@@ -87,6 +87,8 @@
           <PlannerCalendar
             :ptoDates="ptoDates"
             :holidays="holidays"
+            :flexDays="flexDays"
+            :payDays="payDays"
             @delete-pto="deletePto"
           ></PlannerCalendar>
         </div>
@@ -110,6 +112,8 @@ import {
   getPtoDayForSingle,
   getTotalPtoHours,
 } from "@/functions/ptoHoursCalculator";
+import { getFlexDays } from "@/functions/flexDayCalculator";
+import { getPayDays } from "@/functions/payDayCalculator";
 import moment from "moment";
 
 export default {
@@ -156,6 +160,16 @@ export default {
     },
     ptoDates: function () {
       return this.$store.getters.ptoDates;
+    },
+    flexDays() {
+      return getFlexDays(this.$store.getters.userInfo.flexDayReferenceDate);
+    },
+    payDays() {
+      return getPayDays(
+        this.$store.state.plans.find(
+          (plan) => plan.name === this.$store.getters.selectedPlan
+        ).year
+      );
     },
   },
   methods: {
