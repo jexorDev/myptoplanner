@@ -101,3 +101,17 @@ export function getRolloverMax(hireDate, planYear) {
 
     return maxRolloverHours;
 }
+
+export function getPtoHoursOnDay(date, hireDate, planYear) {
+    const ptoBreakdown = getPtoBreakdown(hireDate, planYear);
+    
+    if (ptoBreakdown.breakdown.length === 1) {
+        return ptoBreakdown.breakdown[0].ptoHoursPerPay
+    } else {
+        if (moment(date).isBefore(moment(ptoBreakdown.breakdown[0].dateEnd))) {
+            return ptoBreakdown.breakdown[0].ptoHoursPerPay;
+        } else {
+            return ptoBreakdown.breakdown[1].ptoHoursPerPay;
+        }
+    }
+}

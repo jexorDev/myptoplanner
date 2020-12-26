@@ -73,7 +73,7 @@ export default {
   data: () => ({}),
   computed: {
     plans() {
-      return this.$store.getters.planNames;
+      return this.$store.state.plans.map((plan) => plan.name);
     },
     selectedPlan: {
       get() {
