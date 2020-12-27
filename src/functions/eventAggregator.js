@@ -1,7 +1,7 @@
 import { getPtoHoursOnDay } from "./employeeInfoCalculator";
 import moment from "moment";
 
-export function getAggregatedEventList(pto, flex, hoiday, payday, hireDate, planYear) {
+export function getAggregatedEventList(pto, flex, hoiday, payday, hireDate, planYear, beginningBalance) {
     let eventList = [
         ...pto.map(pto => ({
             type: "usage",
@@ -15,11 +15,17 @@ export function getAggregatedEventList(pto, flex, hoiday, payday, hireDate, plan
         }))
     ];
 
-    eventList = eventList.sort((a, b) => { return moment(b.date).isSameOrBefore(moment(a.date)) }).map(currentEvent => ({
+    eventList.push({
+        type: "beginning balance",
+        date: moment({ month: 0, day: 1, year: planYear }).format("YYYY-MM-DD"),
+        hours: beginningBalance
+    });
+
+    eventList = eventList.map(currentEvent => ({
         ...currentEvent,
         runningTotal: eventList.filter(allEvents => moment(allEvents.date).isBefore(moment(currentEvent.date)) || 
         (moment(allEvents.date).isSame(moment(currentEvent.date)))).reduce((acc, value) => { return acc + value.hours }, 0)
     }));
 
-    console.log(eventList);
+    return eventList.sort((a, b) => { return moment(b.date).isSameOrBefore(moment(a.date)) ? 1 : -1 })
 }

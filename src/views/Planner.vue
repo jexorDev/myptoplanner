@@ -74,7 +74,7 @@
           {{ totalHours }} total hours
         </div>
       </v-col>
-      <v-col cols="2">
+      <v-col>
         <v-btn class="mt-5 d-inline" color="primary" @click="addPto"
           >Enter</v-btn
         >
@@ -92,11 +92,16 @@
             @delete-pto="deletePto"
           ></PlannerCalendar>
         </div>
-        <div v-show="viewType === 'list'"></div>
+        <div v-show="viewType === 'list'">
+          <PlannerList @delete-pto="deletePto"> </PlannerList>
+        </div>
       </v-col>
       <v-col>
         <div class="mt-3">
           <WidgetHoursRemaining></WidgetHoursRemaining>
+        </div>
+        <div class="mt-3">
+          <WidgetRolloverHoursRemaining></WidgetRolloverHoursRemaining>
         </div>
       </v-col>
     </v-row>
@@ -104,6 +109,8 @@
 </template>
 <script>
 import WidgetHoursRemaining from "@/components/widgets/WidgetHoursRemaining";
+import WidgetRolloverHoursRemaining from "@/components/widgets/WidgetRolloverHoursRemaining";
+import PlannerList from "@/components/PtoPlanning/PlannerList";
 import PlannerCalendar from "@/components/PtoPlanning/PlannerCalendar";
 import DatePickerInMenu from "@/components/Inputs/DatePickerInMenu";
 import { getIsoDateString } from "@/functions/dateHelpers";
@@ -112,16 +119,18 @@ import {
   getPtoDayForSingle,
   getTotalPtoHours,
 } from "@/functions/ptoHoursCalculator";
-import { getFlexDays } from "@/functions/flexDayCalculator";
-import { getPayDays } from "@/functions/payDayCalculator";
+import plannerMixin from "@/mixins/plannerMixin";
 import moment from "moment";
 
 export default {
   name: "Planner",
+  mixins: [plannerMixin],
   components: {
     PlannerCalendar,
+    PlannerList,
     DatePickerInMenu,
     WidgetHoursRemaining,
+    WidgetRolloverHoursRemaining,
   },
   data: () => ({
     viewType: "calendar",
@@ -158,19 +167,6 @@ export default {
             )
           );
     },
-    ptoDates: function () {
-      return this.$store.getters.ptoDates;
-    },
-    flexDays() {
-      return getFlexDays(this.$store.getters.userInfo.flexDayReferenceDate);
-    },
-    payDays() {
-      return getPayDays(
-        this.$store.state.plans.find(
-          (plan) => plan.name === this.$store.getters.selectedPlan
-        ).year
-      );
-    },
   },
   methods: {
     addPto() {
@@ -191,13 +187,13 @@ export default {
       }
 
       this.$store.dispatch("addPtoDates", {
-        planName: this.$store.getters.selectedPlan,
+        planName: this.$store.getters.selectedPlanName,
         pto: ptoDays,
       });
     },
     deletePto(date) {
       this.$store.dispatch("deletePtoDates", {
-        planName: this.$store.getters.selectedPlan,
+        planName: this.$store.getters.selectedPlanName,
         date: date,
       });
     },

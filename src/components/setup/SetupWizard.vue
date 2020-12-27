@@ -149,7 +149,7 @@ import { getIsoDateString } from "@/functions/dateHelpers";
 import moment from "moment";
 
 export default {
-  name: "InitializeWizard",
+  name: "SetupWizard",
   components: {
     SetupPlan,
     SetupSummary,
@@ -202,7 +202,7 @@ export default {
         hoursToRollover: this.hoursToRollover,
         hoursBankedPrior: this.bankedHoursFromPriorYear,
       });
-      this.$store.dispatch("setSelectedPlan", this.planName);
+      this.$store.dispatch("setSelectedPlanName", this.planName);
       this.$router.push({ path: "/" });
     },
   },

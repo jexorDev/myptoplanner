@@ -108,9 +108,7 @@ export default {
       this.oldFlexDayReferenceDate = this.flexDayReferenceDate;
 
       //plan info
-      const plan = this.$store.state.plans.find(
-        (plan) => plan.name === this.$store.getters.selectedPlan
-      );
+      const plan = this.$store.getters.selectedPlan;
 
       if (plan) {
         this.planName = plan.name;

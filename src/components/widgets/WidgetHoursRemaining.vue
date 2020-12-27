@@ -13,7 +13,7 @@
     </div>
 
     <div class="d-flex justify-center font-weight-medium">
-      {{ totalPtoPlanned }} of {{ totalHoursToPlan }} planned
+      {{ totalPtoPlanned }} of {{ totalPtoToPlan }} planned
     </div>
     <div class="d-flex justify-center">
       {{ remainingPtoToPlan }} hours remaining to plan
@@ -21,54 +21,25 @@
   </div>
 </template>
 <script>
-import { getPtoBreakdown } from "@/functions/employeeInfoCalculator";
+import plannerMixin from "@/mixins/plannerMixin";
 
 export default {
   name: "WidgetHoursRemaining",
-  data: () => ({
-    totalHoursToPlan: 0,
-  }),
-  mounted: function () {
-    this.setTotalHoursToPlan();
-  },
+  mixins: [plannerMixin],
   computed: {
-    totalPtoPlanned: function () {
-      return this.$store.getters.ptoDates
-        .filter((ptoDate) => ptoDate.plan === this.$store.getters.selectedPlan)
-        .map((ptoDate) => ptoDate.hours)
-        .reduce((acc, val) => {
-          return acc + val;
-        }, 0);
-    },
-    remainingPtoToPlan: function () {
-      return this.totalHoursToPlan - this.totalPtoPlanned;
-    },
-    plannedPtoPercent: function () {
-      return this.totalHoursToPlan > 0
-        ? (this.totalPtoPlanned / this.totalHoursToPlan) * 100
-        : 0;
-    },
-    selectedPlan: function () {
-      return this.$store.getters.selectedPlan;
-    },
-  },
-  watch: {
-    selectedPlan() {
-      this.setTotalHoursToPlan();
-    },
-  },
-  methods: {
-    setTotalHoursToPlan() {
-      const plan = this.$store.state.plans.find(
-        (plan) => plan.name === this.$store.getters.selectedPlan
+    totalPtoToPlan() {
+      return (
+        this.totalPtoAccrualHours -
+        this.$store.getters.selectedPlan.hoursToRollover
       );
-
-      if (!plan) return;
-
-      this.totalHoursToPlan = getPtoBreakdown(
-        this.$store.getters.userInfo.dateOfHire,
-        plan.year
-      ).totalHours;
+    },
+    remainingPtoToPlan() {
+      return this.totalPtoToPlan - this.totalPtoPlanned;
+    },
+    plannedPtoPercent() {
+      return this.totalPtoToPlan > 0
+        ? (this.totalPtoPlanned / this.totalPtoToPlan) * 100
+        : 0;
     },
   },
 };

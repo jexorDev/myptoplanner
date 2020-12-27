@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    selectedPlan: "",
+    selectedPlanName: "",
     dateOfHire: "",
     isDeveloper: false,
     flexDayReferenceDate: "",
@@ -21,8 +21,8 @@ export default new Vuex.Store({
       state.plans = [...payload.plans];
       state.ptoDates = [...payload.ptoDates];
     },
-    setSelectedPlan(state, payload) {
-      state.selectedPlan = payload;
+    setSelectedPlanName(state, payload) {
+      state.selectedPlanName = payload;
     },
     setUserInfo(state, payload) {
       state.dateOfHire = payload.dateOfHire;
@@ -40,8 +40,8 @@ export default new Vuex.Store({
     setState({ commit }, payload) {
       commit('setState', payload);
     },
-    setSelectedPlan({ commit }, payload) {
-      commit('setSelectedPlan', payload);
+    setSelectedPlanName({ commit }, payload) {
+      commit('setSelectedPlanName', payload);
     },
     setUserInfo({ commit, state }, payload) {      
       commit('setUserInfo', payload);
@@ -83,17 +83,17 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    selectedPlanName: state => {
+      return state.selectedPlanName;
+    },
     selectedPlan: state => {
-      return state.selectedPlan;
+      return state.selectedPlanName === "" ? {} : state.plans.find(plan => plan.name === state.selectedPlanName);
     },
     userInfo: state => {
       return { dateOfHire: state.dateOfHire, isDeveloper: state.isDeveloper, flexDayReferenceDate: state.flexDayReferenceDate };
     },
-    planNames: state => {
-      return state.plans.map(plan => plan.name);
-    },
     ptoDates: state => {
-      return state.ptoDates ?? []
+      return state.ptoDates.filter(ptoDate => ptoDate.plan === state.selectedPlanName);
     },
   },
   modules: {

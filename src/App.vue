@@ -77,10 +77,10 @@ export default {
     },
     selectedPlan: {
       get() {
-        return this.$store.getters.selectedPlan;
+        return this.$store.getters.selectedPlanName;
       },
       set(value) {
-        this.$store.dispatch("setSelectedPlan", value);
+        this.$store.dispatch("setSelectedPlanName", value);
       },
     },
   },
@@ -98,7 +98,7 @@ export default {
       }
     } else {
       this.selectedPlan = this.$store.state.plans[0].name;
-      this.$store.dispatch("setSelectedPlan", this.selectedPlan);
+      this.$store.dispatch("setSelectedPlanName", this.selectedPlan);
     }
   },
 };

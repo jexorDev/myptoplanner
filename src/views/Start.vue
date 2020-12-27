@@ -1,13 +1,13 @@
 <template>
-  <InitializeWizard></InitializeWizard>
+  <SetupWizard></SetupWizard>
 </template>
 <script>
-import InitializeWizard from "@/components/InitializeWizard";
+import SetupWizard from "@/components/setup/SetupWizard";
 
 export default {
   name: "Start",
   components: {
-    InitializeWizard,
+    SetupWizard,
   },
 };
 </script>
