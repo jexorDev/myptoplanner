@@ -143,11 +143,6 @@ export default {
     singleEntryHours: 0,
     meridianList: ["AM", "PM", "None"],
     selectedMeridian: "AM",
-    holidays: [
-      { description: "Christmas", date: "2020-12-25" },
-      { description: "Christmas Eve", date: "2020-12-24" },
-      { description: "New Year's Day", date: "2021-01-01" },
-    ],
   }),
   computed: {
     totalHours: function () {

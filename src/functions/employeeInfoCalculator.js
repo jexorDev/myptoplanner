@@ -108,7 +108,7 @@ export function getPtoHoursOnDay(date, hireDate, planYear) {
     if (ptoBreakdown.breakdown.length === 1) {
         return ptoBreakdown.breakdown[0].ptoHoursPerPay
     } else {
-        if (moment(date).isBefore(moment(ptoBreakdown.breakdown[0].dateEnd))) {
+        if (moment(date).isSameOrBefore(moment(ptoBreakdown.breakdown[0].dateEnd))) {
             return ptoBreakdown.breakdown[0].ptoHoursPerPay;
         } else {
             return ptoBreakdown.breakdown[1].ptoHoursPerPay;

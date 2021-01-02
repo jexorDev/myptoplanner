@@ -28,7 +28,7 @@
       permanent
       v-show="plans.length > 0"
     >
-      <v-list dense>
+      <v-list>
         <v-list-item link to="/">
           <v-list-item-icon>
             <v-icon>mdi-gauge</v-icon>
@@ -57,6 +57,28 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <template v-slot:append>
+        <v-list class="mb-6" dense>
+          <v-list-item link>
+            <v-list-item-icon
+              ><v-icon>mdi-comment-quote-outline</v-icon></v-list-item-icon
+            >
+            <v-list-item-content>Leave Feedback</v-list-item-content>
+          </v-list-item>
+          <v-list-item link>
+            <v-list-item-icon
+              ><v-icon>mdi-bug-check-outline</v-icon></v-list-item-icon
+            >
+            <v-list-item-content>Report a Bug</v-list-item-content>
+          </v-list-item>
+          <v-list-item link href="https://github.com/jexorDev/myptoplanner">
+            <v-list-item-icon>
+              <v-icon>mdi-github</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>Contribute</v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </template>
     </v-navigation-drawer>
     <v-main class="ml-3">
       <v-container fluid>

@@ -1,6 +1,7 @@
 import { getFlexDays } from "@/functions/flexDayCalculator";
 import { getPayDays } from "@/functions/payDayCalculator";
 import { getPtoBreakdown } from "@/functions/employeeInfoCalculator";
+import { getHolidays } from "@/functions/holidayCalculator";
 
 export default {
     name: "plannerMixin",
@@ -10,6 +11,9 @@ export default {
         },
         flexDays() {
             return getFlexDays(this.$store.getters.userInfo.flexDayReferenceDate);
+        },
+        holidays() {
+            return getHolidays(this.$store.getters.selectedPlan.year);
         },
         payDays() {
             return getPayDays(

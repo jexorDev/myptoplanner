@@ -1,7 +1,7 @@
 import { getPtoHoursOnDay } from "./employeeInfoCalculator";
 import moment from "moment";
 
-export function getAggregatedEventList(pto, flex, hoiday, payday, hireDate, planYear, beginningBalance) {
+export function getAggregatedEventList(pto, flex, holiday, payday, hireDate, planYear, beginningBalance) {
     let eventList = [
         ...pto.map(pto => ({
             type: "usage",
