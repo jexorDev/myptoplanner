@@ -4,14 +4,30 @@
       <v-col>
         <v-sheet>
           <v-toolbar flat>
-            <v-btn fab text small color="grey darken-2" @click="prev">
+            <v-btn
+              :disabled="!canMovePreviousMonth"
+              fab
+              text
+              small
+              color="grey darken-2"
+              class="mr-2"
+              @click="prev"
+            >
               <v-icon small> mdi-chevron-left </v-icon>
             </v-btn>
             <v-toolbar-title v-if="$refs.calendar">
               {{ $refs.calendar.title }}
             </v-toolbar-title>
 
-            <v-btn fab text small color="grey darken-2" @click="next">
+            <v-btn
+              :disabled="!canMoveNextMonth"
+              fab
+              text
+              small
+              color="grey darken-2"
+              class="ml-2"
+              @click="next"
+            >
               <v-icon small> mdi-chevron-right </v-icon>
             </v-btn>
           </v-toolbar>
@@ -55,13 +71,12 @@
   </div>
 </template>
 <script>
-import { getIsoDateString } from "@/functions/dateHelpers";
 import moment from "moment";
 
 export default {
   name: "PlannerCalendar",
   data: () => ({
-    focus: getIsoDateString(moment()),
+    focus: "",
     selectedEvent: {},
     selectedElement: null,
     selectedOpen: false,
@@ -75,6 +90,7 @@ export default {
   },
   mounted() {
     this.$refs.calendar.checkChange();
+    this.focus = moment().format("YYYY-MM-DD");
   },
   computed: {
     events: function () {
@@ -109,6 +125,12 @@ export default {
         })),
       ];
     },
+    canMovePreviousMonth() {
+      return moment(this.focus).month() !== 0;
+    },
+    canMoveNextMonth() {
+      return moment(this.focus).month() !== 11;
+    },
   },
   methods: {
     deletePto(date) {
@@ -116,10 +138,14 @@ export default {
       this.selectedOpen = false;
     },
     prev() {
-      this.$refs.calendar.prev();
+      if (this.canMovePreviousMonth) {
+        this.$refs.calendar.prev();
+      }
     },
     next() {
-      this.$refs.calendar.next();
+      if (this.canMoveNextMonth) {
+        this.$refs.calendar.next();
+      }
     },
     getEventColor(event) {
       return event.color;
@@ -143,6 +169,11 @@ export default {
       }
 
       nativeEvent.stopPropagation();
+    },
+  },
+  watch: {
+    focus() {
+      this.$emit("focus-changed", this.focus);
     },
   },
 };

@@ -90,6 +90,7 @@
             :flexDays="flexDays"
             :payDays="payDays"
             @delete-pto="deletePto"
+            @focus-changed="calendarDateChanged"
           ></PlannerCalendar>
         </div>
         <div v-show="viewType === 'list'">
@@ -196,6 +197,11 @@ export default {
         planName: this.$store.getters.selectedPlanName,
         date: date,
       });
+    },
+    calendarDateChanged(date) {
+      this.singleEntryDate = getIsoDateString(moment(date));
+      this.groupEntryStartDate = getIsoDateString(moment(date));
+      this.groupEntryEndDate = getIsoDateString(moment(date).add(1, "day"));
     },
   },
 };
