@@ -1,41 +1,56 @@
 <template>
-  <v-row>
-    <v-col cols="3">
-      <v-card class="dashboard-card">
-        <v-card-title class="headline d-flex justify-center"
-          >Planned hours</v-card-title
-        >
-        <v-card-text>
-          <WidgetHoursRemaining></WidgetHoursRemaining>
-        </v-card-text>
-      </v-card>
-    </v-col>
-    <v-col cols="3">
-      <v-card class="dashboard-card">
-        <v-card-title class="headline d-flex justify-center"
-          >Rollover hours</v-card-title
-        >
-        <v-card-text>
-          <WidgetRolloverHoursRemaining></WidgetRolloverHoursRemaining>
-        </v-card-text>
-      </v-card>
-    </v-col>
-    <v-col cols="3">
-      <v-card class="dashboard-card">
-        <v-card-title class="headline d-flex justify-center"
-          >Ending Balance</v-card-title
-        >
-        <v-card-text>
-          <WidgetNextYearBanked></WidgetNextYearBanked>
-        </v-card-text>
-      </v-card>
-    </v-col>
-  </v-row>
+  <div>
+    <v-row>
+      <v-col cols="3">
+        <v-card class="dashboard-card">
+          <v-card-title class="headline d-flex justify-center"
+            >Planned hours</v-card-title
+          >
+          <v-card-text>
+            <WidgetHoursRemaining></WidgetHoursRemaining>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="3">
+        <v-card class="dashboard-card">
+          <v-card-title class="headline d-flex justify-center"
+            >Rollover hours</v-card-title
+          >
+          <v-card-text>
+            <WidgetRolloverHoursRemaining></WidgetRolloverHoursRemaining>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="3">
+        <v-card class="dashboard-card">
+          <v-card-title class="headline d-flex justify-center"
+            >Ending Balance</v-card-title
+          >
+          <v-card-text>
+            <WidgetNextYearBanked></WidgetNextYearBanked>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="4">
+        <v-card class="dashboard-card">
+          <v-card-title class="headline d-flex justify-center">
+            Balance over time
+          </v-card-title>
+          <v-card-text>
+            <WidgetBalanceOverTime></WidgetBalanceOverTime>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 <script>
 import WidgetHoursRemaining from "@/components/widgets/WidgetHoursRemaining";
 import WidgetRolloverHoursRemaining from "@/components/widgets/WidgetRolloverHoursRemaining";
 import WidgetNextYearBanked from "@/components/widgets/WidgetNextYearBanked";
+import WidgetBalanceOverTime from "@/components/widgets/WidgetBalanceOverTime";
 
 export default {
   name: "Dashboard",
@@ -43,6 +58,7 @@ export default {
     WidgetHoursRemaining,
     WidgetRolloverHoursRemaining,
     WidgetNextYearBanked,
+    WidgetBalanceOverTime,
   },
 };
 </script>

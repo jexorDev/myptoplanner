@@ -19,11 +19,20 @@
         <v-stepper-content step="1">
           <v-row>
             <v-col>
-              <div class="display-2">Welcome!</div>
+              <div class="display-1">Welcome!</div>
               <div>
-                This tool will help you plan out your PTO. Since this is your
-                first visit, we will need some information to calculate your PTO
-                before you can make a plan.
+                Since this is your first visit, we will need some information to
+                calculate your PTO before you can begin planning.
+              </div>
+              <div class="mt-2">
+                Note that all of your information will be stored in your
+                browser's storage. It is recommended that you use the
+                export/import functionality to create routine backups in case
+                you erase your browser data.
+              </div>
+              <div class="mt-2">
+                Already have a backup you previously made?
+                <a>Import it here.</a>
               </div>
             </v-col>
           </v-row>
@@ -43,6 +52,8 @@
           <SetupService
             :dateOfHire.sync="dateOfHire"
             :isDeveloper.sync="isDeveloper"
+            :participatesInFlex.sync="participatesInFlex"
+            :flexScheduleType.sync="flexScheduleType"
             :flexDayReferenceDate.sync="flexDayReferenceDate"
           ></SetupService>
           <v-row class="mt-4">
@@ -65,6 +76,7 @@
             :bankedHoursFromPriorYear.sync="bankedHoursFromPriorYear"
             :dateOfHire="dateOfHire"
           ></SetupPlan>
+
           <v-row class="mt-4">
             <v-col class="d-flex justify-space-between">
               <v-btn color="primary" @click="step--">
@@ -80,44 +92,20 @@
         <v-stepper-content step="4">
           <v-row>
             <v-col>
-              <div class="display-1">{{ planName }}</div>
+              <div class="headline">{{ planName }}</div>
+              <div class="overline">Your plan summary</div>
             </v-col>
           </v-row>
           <v-row>
             <v-col>
               <SetupSummary
+                v-if="ptoBreakdown"
                 :planYear="selectedPlanYear"
                 :bankedHoursFromPriorYear="bankedHoursFromPriorYear"
                 :hoursWillAccrueForPlanYear="hoursWillAccrueForPlanYear"
                 :hoursToRollover="hoursToRollover"
+                :ptoAccrualBreakdown="ptoBreakdown.breakdown"
               ></SetupSummary>
-            </v-col>
-            <v-col>
-              <div>PTO Rate Effective Dates</div>
-
-              <v-simple-table v-if="ptoBreakdown">
-                <template v-slot:default>
-                  <thead>
-                    <tr>
-                      <th>Start</th>
-                      <th>End</th>
-                      <th>Hours Per Pay</th>
-                      <th>Total Hours</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="(ptoRow, index) in ptoBreakdown.breakdown"
-                      :key="index"
-                    >
-                      <td>{{ ptoRow.dateStart.format("MM/DD/YYYY") }}</td>
-                      <td>{{ ptoRow.dateEnd.format("MM/DD/YYYY") }}</td>
-                      <td>{{ ptoRow.ptoHoursPerPay }}</td>
-                      <td>{{ ptoRow.totalPtoHours }}</td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
             </v-col>
           </v-row>
           <v-row class="mt-4">
@@ -161,6 +149,8 @@ export default {
       .toISOString()
       .substring(0, 10),
     isDeveloper: false,
+    participatesInFlex: false,
+    flexScheduleType: "full",
     flexDayReferenceDate: getIsoDateString(moment()),
     ptoBreakdown: null,
     planName: "",
