@@ -38,7 +38,6 @@ export function getTotalPtoHours(ptoDays) {
     }
 
     return totalPtoHours;
-    //return ptoDays.reduce((accumulator, currentValue) => { accumulator + currentValue.hours });
 }
 
 export function getPtoDaysForRange(fromDate, toDate, isDeveloper) {
