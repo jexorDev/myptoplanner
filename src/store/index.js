@@ -5,43 +5,96 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-      dateOfHire: "",
+    selectedPlanName: "",
+    dateOfHire: "",
+    isDeveloper: false,
+    flexDayReferenceDate: "",
     plans: [],
-      ptoDates: []
+    ptoDates: []
   },
   mutations: {
     setState(state, payload) {
+      state.selectedPlan = payload.plans ? payload.plans[0] : "";
       state.dateOfHire = payload.dateOfHire;
-      state.plans = [...payload.plans]
+      state.isDeveloper = payload.isDeveloper;
+      state.flexDayReferenceDate = payload.flexDayReferenceDate;
+      state.plans = [...payload.plans];
+      state.ptoDates = [...payload.ptoDates];
     },
-    setHireDate(state, hireDate) {
-      state.dateOfHire = hireDate;
+    setSelectedPlanName(state, payload) {
+      state.selectedPlanName = payload;
     },
-    addPlan(state, plan) {
-      state.plans = [...state.plans, plan];
+    setUserInfo(state, payload) {
+      state.dateOfHire = payload.dateOfHire;
+      state.isDeveloper = payload.isDeveloper;
+      state.flexDayReferenceDate = payload.flexDayReferenceDate;
     },
-    
+    setPlans(state, payload) {
+      state.plans = [...payload];
+    },
+    setPtoDates(state, payload) {
+      state.ptoDates = payload
+    }
   },
   actions: {
     setState({ commit }, payload) {
       commit('setState', payload);
     },
-    setHireDate({ commit, state }, payload) {
-      commit('setHireDate', payload);
+    setSelectedPlanName({ commit }, payload) {
+      commit('setSelectedPlanName', payload);
+    },
+    setUserInfo({ commit, state }, payload) {      
+      commit('setUserInfo', payload);
       localStorage.setItem('state', JSON.stringify(state));
     },
     addPlan({ commit, state }, payload) {
-      commit('addPlan', payload);
+      commit('setPlans', [...state.plans, payload]);
       localStorage.setItem('state', JSON.stringify(state));
+    },
+    updatePlan({ commit, state }, payload) {
+      const existingPlans = state.plans.filter(plan => plan.name !== payload.originalName);
+      commit('setPlans', [...existingPlans, payload.updatedPlan]);
+      localStorage.setItem('state', JSON.stringify(state));
+    },
+    deletePlan({ commit, state }, payload) {
+      commit('setPlans', [state.plans.filter(plan => plan.name !== payload)]);  
+      localStorage.setItem('state', JSON.stringify(state));
+    },
+    addPtoDates({ commit, state }, payload) {
+      const newDates = [];      
+      for (let pto of payload.pto) {
+        newDates.push({ plan: payload.planName, date: pto.date, hours: pto.hours });
+      }
+      const newPtoDates = [...state.ptoDates.filter(ptoDate => !newDates.find(newDate => newDate.plan === ptoDate.plan && newDate.date === ptoDate.date)), ...newDates];
+    
+      commit('setPtoDates', newPtoDates);
+      localStorage.setItem('state', JSON.stringify(state));
+
+    },
+    deletePtoDates({ commit, state }, payload) {
+      commit('setPtoDates', [...state.ptoDates.filter(ptoDate => ptoDate.planName !== payload.planName && ptoDate.date !== payload.date)] )
+      localStorage.setItem('state', JSON.stringify(state));
+
+    },
+    deleteAccount({ commit }) {
+      commit('setState', {});
+      localStorage.removeItem('state');
+      
     }
   },
   getters: {
-    planNames: state => {
-      return state.plans.map(plan => plan.name);
+    selectedPlanName: state => {
+      return state.selectedPlanName;
     },
-    plannedPtoTotal: state => {
-      return state.ptoDates.length > 0 ? state.ptoDates.reduce((accumulator, currentValue) => accumulator + currentValue) : 60
-    }
+    selectedPlan: state => {
+      return state.selectedPlanName === "" ? {} : state.plans.find(plan => plan.name === state.selectedPlanName);
+    },
+    userInfo: state => {
+      return { dateOfHire: state.dateOfHire, isDeveloper: state.isDeveloper, flexDayReferenceDate: state.flexDayReferenceDate };
+    },
+    ptoDates: state => {
+      return state.ptoDates.filter(ptoDate => ptoDate.plan === state.selectedPlanName);
+    },
   },
   modules: {
   }

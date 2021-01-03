@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
+    <v-app-bar app color="primary" dark clipped-left>
       <div class="d-flex align-center headline">My PTO Planner</div>
 
       <v-spacer></v-spacer>
@@ -13,142 +13,97 @@
           outlined
           dense
           class="mt-2"
-        ></v-select>
+        >
+          <template v-slot:append-item>
+            <v-btn color="primary" text>Add Plan</v-btn>
+          </template>
+        </v-select>
       </div>
     </v-app-bar>
 
-    <v-main>
+    <v-navigation-drawer
+      app
+      clipped
+      expand-on-hover
+      permanent
+      v-show="plans.length > 0"
+    >
+      <v-list>
+        <v-list-item link to="/">
+          <v-list-item-icon>
+            <v-icon>mdi-gauge</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>Dashboard</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item link to="/planner">
+          <v-list-item-icon>
+            <v-icon>mdi-calendar</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>Planner</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item link to="/settings">
+          <v-list-item-icon>
+            <v-icon>mdi-cog-outline</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>Settings</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <template v-slot:append>
+        <v-list class="mb-6" dense>
+          <v-list-item link>
+            <v-list-item-icon
+              ><v-icon>mdi-comment-quote-outline</v-icon></v-list-item-icon
+            >
+            <v-list-item-content>Leave Feedback</v-list-item-content>
+          </v-list-item>
+          <v-list-item link>
+            <v-list-item-icon
+              ><v-icon>mdi-bug-check-outline</v-icon></v-list-item-icon
+            >
+            <v-list-item-content>Report a Bug</v-list-item-content>
+          </v-list-item>
+          <v-list-item link href="https://github.com/jexorDev/myptoplanner">
+            <v-list-item-icon>
+              <v-icon>mdi-github</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>Contribute</v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </template>
+    </v-navigation-drawer>
+    <v-main class="ml-3">
       <v-container fluid>
-        <v-tabs vertical :centered="false" v-if="plans.length > 0">
-          <div class="overline grey--text">Plan PTO</div>
-          <v-tab>
-            <span class="float-left">
-              <v-icon left> mdi-gauge </v-icon>
-              Dashboard
-            </span>
-          </v-tab>
-
-          <v-tab>
-            <v-icon left> mdi-calendar-edit </v-icon>
-            Calendar View
-          </v-tab>
-          <v-tab>
-            <v-icon left> mdi-playlist-edit </v-icon>
-            List View
-          </v-tab>
-          <div class="overline grey--text">Settings</div>
-          <v-tab>
-            <v-icon left> mdi-cog-outline </v-icon>
-            Edit Plan
-          </v-tab>
-          <v-tab>
-            <v-icon left> mdi-cog-transfer-outline </v-icon>
-            Import/Export Plan
-          </v-tab>
-
-          <v-tab-item>
-            <v-card flat>
-              <v-card-text>
-                <v-row>
-                  <v-col cols="4">
-                    <v-card>
-                      <v-card-title class="headline"
-                        >Planned hours</v-card-title
-                      >
-                      <v-card-text>
-                        <v-progress-circular
-                          :rotate="-90"
-                          :size="100"
-                          :width="15"
-                          :value="percentagePlannedPto"
-                          color="pink"
-                        >
-                          {{ totalPlannedPtoHours }}
-                        </v-progress-circular>
-                        <div class="outline">
-                          {{ totalPlannedPtoHours }} of 158 hours PTO planned
-                        </div>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                  <v-col> </v-col>
-                </v-row>
-              </v-card-text>
-            </v-card>
-          </v-tab-item>
-          <v-tab-item>
-            <v-card flat>
-              <v-card-text>
-                <v-btn fab text small color="grey darken-2">
-                  <v-icon small> mdi-chevron-left </v-icon>
-                </v-btn>
-                <v-btn fab text small color="grey darken-2">
-                  <v-icon small> mdi-chevron-right </v-icon>
-                </v-btn>
-                <v-toolbar-title v-if="$refs.calendar">
-                  {{ $refs.calendar.title }}
-                </v-toolbar-title>
-                <v-calendar ref="calendar" type="month"></v-calendar>
-              </v-card-text>
-            </v-card>
-          </v-tab-item>
-          <v-tab-item>
-            <v-card flat>
-              <v-card-text>
-                <p>
-                  Fusce a quam. Phasellus nec sem in justo pellentesque
-                  facilisis. Nam eget dui. Proin viverra, ligula sit amet
-                  ultrices semper, ligula arcu tristique sapien, a accumsan nisi
-                  mauris ac eros. In dui magna, posuere eget, vestibulum et,
-                  tempor auctor, justo.
-                </p>
-
-                <p class="mb-0">
-                  Cras sagittis. Phasellus nec sem in justo pellentesque
-                  facilisis. Proin sapien ipsum, porta a, auctor quis, euismod
-                  ut, mi. Donec quam felis, ultricies nec, pellentesque eu,
-                  pretium quis, sem. Nam at tortor in tellus interdum sagittis.
-                </p>
-              </v-card-text>
-            </v-card>
-          </v-tab-item>
-        </v-tabs>
-
-        <InitializeWizard v-if="plans.length === 0"></InitializeWizard>
+        <router-view></router-view>
       </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import InitializeWizard from "./components/InitializeWizard";
-
 export default {
   name: "App",
 
-  components: {
-    InitializeWizard,
-  },
-  data: () => ({
-    selectedPlan: "",
-    hoursToUse: 150,
-  }),
+  data: () => ({}),
   computed: {
-    plans: function () {
-      return this.$store.getters.planNames;
+    plans() {
+      return this.$store.state.plans.map((plan) => plan.name);
     },
-    totalPlannedPtoHours: function () {
-      return this.$store.getters.plannedPtoTotal;
-    },
-    percentagePlannedPto: function () {
-      return (parseFloat(this.totalPlannedPtoHours) / this.hoursToUse) * 100;
-    },
-  },
-  watch: {
-    plans(newPlans, oldPlans) {
-      if (oldPlans.length === 0 && newPlans.length > 0) {
-        this.selectedPlan = this.plans[0];
-      }
+    selectedPlan: {
+      get() {
+        return this.$store.getters.selectedPlanName;
+      },
+      set(value) {
+        this.$store.dispatch("setSelectedPlanName", value);
+      },
     },
   },
   created: function () {
@@ -159,9 +114,14 @@ export default {
       this.$store.dispatch("setState", state);
     }
 
-    // if (this.plans.length > 0) {
-    //   this.selectedPlan = this.plans[0];
-    // }
+    if (this.$store.state.plans.length === 0) {
+      if (this.$route.name !== "Start") {
+        this.$router.push({ path: "/start" });
+      }
+    } else {
+      this.selectedPlan = this.$store.state.plans[0].name;
+      this.$store.dispatch("setSelectedPlanName", this.selectedPlan);
+    }
   },
 };
 </script>
