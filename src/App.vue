@@ -59,23 +59,27 @@
       </v-list>
       <template v-slot:append>
         <v-list class="mb-6" dense>
-          <v-list-item link>
+          <v-list-item @click="showFeedbackDialog = true">
             <v-list-item-icon
               ><v-icon>mdi-comment-quote-outline</v-icon></v-list-item-icon
             >
             <v-list-item-content>Leave Feedback</v-list-item-content>
           </v-list-item>
-          <v-list-item link>
+          <v-list-item @click="showReportBugDialog = true">
             <v-list-item-icon
               ><v-icon>mdi-bug-check-outline</v-icon></v-list-item-icon
             >
             <v-list-item-content>Report a Bug</v-list-item-content>
           </v-list-item>
-          <v-list-item link href="https://github.com/jexorDev/myptoplanner">
+          <v-list-item
+            link
+            target="_blank"
+            href="https://github.com/jexorDev/myptoplanner"
+          >
             <v-list-item-icon>
               <v-icon>mdi-github</v-icon>
             </v-list-item-icon>
-            <v-list-item-content>Contribute</v-list-item-content>
+            <v-list-item-content>GitHub</v-list-item-content>
           </v-list-item>
         </v-list>
       </template>
@@ -85,14 +89,28 @@
         <router-view></router-view>
       </v-container>
     </v-main>
+    <DialogGoogleFormFeedback
+      :show.sync="showFeedbackDialog"
+    ></DialogGoogleFormFeedback>
+    <DialogGoogleFormReportBug :show.sync="showReportBugDialog">
+    </DialogGoogleFormReportBug>
   </v-app>
 </template>
 
 <script>
+import DialogGoogleFormFeedback from "@/components/GoogleForms/DialogGoogleFormFeedback";
+import DialogGoogleFormReportBug from "@/components/GoogleForms/DialogGoogleFormReportBug";
+
 export default {
   name: "App",
-
-  data: () => ({}),
+  components: {
+    DialogGoogleFormFeedback,
+    DialogGoogleFormReportBug,
+  },
+  data: () => ({
+    showFeedbackDialog: false,
+    showReportBugDialog: false,
+  }),
   computed: {
     plans() {
       return this.$store.state.plans.map((plan) => plan.name);

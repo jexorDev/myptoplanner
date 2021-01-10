@@ -39,13 +39,13 @@
           {{ planYearNumeric + 1 }}?
         </div>
         <div class="font-weight-light mb-2">
-          {{ maxRolloverHoursSliderInfo }}
+          You may rollover a maximum of 40 hours to {{ planYearNumeric + 1 }}
         </div>
       </v-col>
       <v-col cols="5">
         <v-slider
           v-model="hoursToRolloverSync"
-          :max="maxHoursCanRollover"
+          :max="40"
           :min="0"
           :thumb-label="true"
           :step="0.25"
@@ -89,7 +89,6 @@
 </template>
 <script>
 import moment from "moment";
-import { getRolloverMax } from "@/functions/employeeInfoCalculator";
 
 export default {
   name: "SetupPlan",
@@ -163,18 +162,6 @@ export default {
       set(value) {
         this.$emit("update:bankedHoursFromPriorYear", parseFloat(value));
       },
-    },
-    maxRolloverHoursSliderInfo: function () {
-      return `With your years of service, you may roll over a maxiumum of ${this.maxHoursCanRollover} hours`;
-    },
-  },
-
-  methods: {
-    setMaxHoursCanRollover() {
-      this.maxHoursCanRollover = getRolloverMax(
-        this.dateOfHire,
-        this.selectedPlanYearSync
-      );
     },
   },
 };

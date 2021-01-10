@@ -61,7 +61,7 @@
               <v-btn color="primary" @click="step--">
                 <v-icon>mdi-chevron-left</v-icon>Previous</v-btn
               >
-              <v-btn color="primary" @click="moveToCreatePlanStep"
+              <v-btn color="primary" @click="step++"
                 >Next<v-icon>mdi-chevron-right</v-icon></v-btn
               >
             </v-col>
@@ -129,10 +129,7 @@
 import SetupPlan from "@/components/setup/SetupPlan";
 import SetupSummary from "@/components/setup/SetupSummary";
 import SetupService from "@/components/setup/SetupService";
-import {
-  getPtoBreakdown,
-  getRolloverMax,
-} from "@/functions/employeeInfoCalculator";
+import { getPtoBreakdown } from "@/functions/employeeInfoCalculator";
 import { getIsoDateString } from "@/functions/dateHelpers";
 import moment from "moment";
 
@@ -156,7 +153,6 @@ export default {
     planName: "",
     selectedPlanYear: "",
     hoursToRollover: 0,
-    maxRolloverHours: 0,
     bankedHoursFromPriorYear: 0,
   }),
   computed: {
@@ -165,13 +161,6 @@ export default {
     },
   },
   methods: {
-    moveToCreatePlanStep() {
-      this.maxRolloverHours = getRolloverMax(
-        this.dateOfHire,
-        this.selectedPlanYear
-      );
-      this.step++;
-    },
     moveToReviewStep() {
       this.ptoBreakdown = getPtoBreakdown(
         this.dateOfHire,

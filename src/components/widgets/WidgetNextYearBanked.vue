@@ -1,35 +1,35 @@
 <template>
   <div>
-    <div class="display-4 d-flex justify-center">
-      {{ endingBalance }}
+    <div class="headline">Next year starting balance</div>
+    <div>
+      <div class="display-4 d-inline">
+        {{ endingBalance }}
+      </div>
+      <div class="d-inline">hours</div>
     </div>
-    <div class="d-flex justify-center">hours</div>
+    <div class="mt-4">
+      <div class="font-weight-medium mr-1 d-inline">
+        You started this year with
+      </div>
+      <div class="d-inline">{{ startingBalance }} hours</div>
+    </div>
   </div>
 </template>
 <script>
 import plannerMixin from "@/mixins/plannerMixin";
-import { getAggregatedEventList } from "@/functions/eventAggregator";
 
 export default {
   name: "WidgetNextYearBanked",
   mixins: [plannerMixin],
   computed: {
-    aggregatedEventList() {
-      return getAggregatedEventList(
-        this.ptoDates,
-        [],
-        [],
-        this.payDays,
-        this.$store.getters.userInfo.dateOfHire,
-        this.$store.getters.selectedPlan.year,
-        this.$store.getters.selectedPlan.hoursBankedPrior
-      );
+    startingBalance() {
+      return this.$store.getters.selectedPlan.hoursBankedPrior;
     },
     endingBalance() {
-      return this.aggregatedEventList.length > 0
-        ? this.aggregatedEventList[this.aggregatedEventList.length - 1]
-            .runningTotal
-        : 0;
+      return (
+        this.$store.getters.selectedPlan.hoursBankedPrior +
+        Math.min(this.totalPtoAccrualHours - this.totalPtoPlanned, 40)
+      );
     },
   },
 };

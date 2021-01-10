@@ -190,7 +190,7 @@ export default {
     deletePto(date) {
       this.$store.dispatch("deletePtoDates", {
         planName: this.$store.getters.selectedPlanName,
-        date: date,
+        date: moment(date).format("YYYY-MM-DD"),
       });
     },
     calendarDateChanged(date) {

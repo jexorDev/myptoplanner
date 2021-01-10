@@ -105,7 +105,7 @@ export default {
         ...this.holidays.map((holiday) => ({
           name: holiday.description,
           start: holiday.date,
-          color: "red",
+          color: "pink",
           timed: false,
           type: "holiday",
         })),

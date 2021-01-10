@@ -23,9 +23,6 @@
       </v-col>
       <v-col cols="3">
         <v-card class="dashboard-card">
-          <v-card-title class="headline d-flex justify-center"
-            >Ending Balance</v-card-title
-          >
           <v-card-text>
             <WidgetNextYearBanked></WidgetNextYearBanked>
           </v-card-text>

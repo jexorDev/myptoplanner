@@ -4,7 +4,7 @@
       <v-row class="mt-5">
         <v-col cols="5">
           <div class="headline font-weight-light mt-5">
-            Forcast and plan your Paid Time Off
+            Forecast and plan your Paid Time Off
           </div>
           <div class="font-weight-regular">
             With this simple to use tool, forecasting and planning your paid
@@ -20,7 +20,7 @@
           <div class="mt-1">
             <v-icon x-large class="d-inline">mdi-update</v-icon>
             <div class="d-inline overline">
-              Maintain a buffer for your rollover limit
+              Set and maintain a buffer for hours to rollover
             </div>
           </div>
           <div class="mt-1">

@@ -9,13 +9,15 @@
         {{ item.date | formatDate }}
       </template>
       <template v-slot:item.type="{ item }">
-        <v-chip :color="getEventColor(item.type)" dark>
-          {{ item.type }}
+        <v-chip :color="getEventColor(item.type)" dark label>
+          <div class="text-uppercase caption" style="width: 130px">
+            {{ getDescription(item.type) }}
+          </div>
         </v-chip>
       </template>
       <template v-slot:item.actions="{ item }">
         <v-icon v-if="item.type === 'usage'" @click="deletePto(item.date)"
-          >mdi-trash-can-outline</v-icon
+          >mdi-close-circle-outline</v-icon
         >
       </template>
     </v-data-table>
@@ -32,32 +34,43 @@ export default {
     tableHeaders: [
       { text: "Date", value: "date" },
       { text: "Type", value: "type" },
-      { text: "Change", value: "hours" },
-      { text: "Balance", value: "runningTotal" },
-      { text: "", value: "actions" },
+      { text: "Change", value: "hours", align: "end" },
+      { text: "Balance", value: "runningTotal", align: "end" },
+      { text: "", value: "actions", width: "200", align: "end" },
     ],
   }),
   computed: {
     aggregatedEventList() {
       return getAggregatedEventList(
         this.ptoDates,
-        [],
-        [],
         this.payDays,
         this.$store.getters.userInfo.dateOfHire,
         this.$store.getters.selectedPlan.year,
-        this.$store.getters.selectedPlan.hoursBankedPrior
+        this.$store.getters.selectedPlan.hoursBankedPrior,
+        this.totalPtoAccrualHours,
+        this.$store.getters.selectedPlan.hoursToRollover
       );
     },
   },
   methods: {
     getDescription(type) {
       if (type === "usage") {
-        return "Usage";
+        return "Hours Used";
       }
       if (type === "add") {
-        return "Add";
+        return "Hours Added";
       }
+      if (type === "beginning") {
+        return "Beginning Balance";
+      }
+      if (type === "forfeited") {
+        return "Forfeited Hours";
+      }
+      if (type === "beginning_next_year") {
+        return "Next Year Start bal";
+      }
+
+      return type;
     },
     getEventColor(type) {
       if (type === "usage") {
@@ -65,6 +78,9 @@ export default {
       }
       if (type === "add") {
         return "green";
+      }
+      if (type === "forfeited") {
+        return "pink";
       }
 
       return "grey";

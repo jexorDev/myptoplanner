@@ -87,21 +87,6 @@ export function getPtoBreakdown(hireDate, planYear) {
     };
 }
 
-export function getRolloverMax(hireDate, planYear) {
-    const inYear = getEmployeeInYear(hireDate, moment({ month: 11, day: 31, year: planYear }));
-
-    let maxRolloverHours = 24;
-
-    if (inYear > 5) {
-        maxRolloverHours = 32;
-    }
-    if (inYear > 9) {
-        maxRolloverHours = 40;
-    }
-
-    return maxRolloverHours;
-}
-
 export function getPtoHoursOnDay(date, hireDate, planYear) {
     const ptoBreakdown = getPtoBreakdown(hireDate, planYear);
     

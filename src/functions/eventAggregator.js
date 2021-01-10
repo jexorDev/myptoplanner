@@ -1,30 +1,41 @@
 import { getPtoHoursOnDay } from "./employeeInfoCalculator";
 import moment from "moment";
 
-export function getAggregatedEventList(pto, flex, holiday, payday, hireDate, planYear, beginningBalance) {
+export function getAggregatedEventList(pto, payday, hireDate, planYear, beginningBalance, totalPtoAccrualHours, hoursToRollover) {
     let eventList = [
         ...pto.map(pto => ({
             type: "usage",
-            date: pto.date,
+            date: moment(pto.date).hour(12),
             hours: pto.hours * -1
         })),
         ...payday.map(payday => ({
             type: "add",
-            date: payday,
+            date: moment(payday).hour(0).minute(0),
             hours: getPtoHoursOnDay(payday, hireDate, planYear)
         }))
     ];
 
     eventList.push({
-        type: "beginning balance",
-        date: moment({ month: 0, day: 1, year: planYear }).format("YYYY-MM-DD"),
+        type: "beginning",
+        date: moment({ month: 0, day: 1, year: planYear }),
         hours: beginningBalance
+    });
+
+    eventList.push({
+        type: "forfeited",
+        date: moment({ month: 11, day: 31, year: planYear, hour: 23, minute: 59 }),
+        hours: Math.min(0, -1 * (totalPtoAccrualHours - hoursToRollover - pto.reduce((acc, value) => { return acc + value.hours }, 0))),
+    });
+    
+        eventList.push({
+        type: "beginning_next_year",
+        date: moment({ month: 0, day: 1, year: (parseInt(planYear) + 1) }),
+        hours: null,
     });
 
     eventList = eventList.map(currentEvent => ({
         ...currentEvent,
-        runningTotal: eventList.filter(allEvents => moment(allEvents.date).isBefore(moment(currentEvent.date)) || 
-        (moment(allEvents.date).isSame(moment(currentEvent.date)))).reduce((acc, value) => { return acc + value.hours }, 0)
+        runningTotal: eventList.filter(allEvents => allEvents.date.isSameOrBefore(currentEvent.date)).reduce((acc, value) => { return acc + value.hours }, 0)
     }));
 
     return eventList.sort((a, b) => { return moment(b.date).isSameOrBefore(moment(a.date)) ? 1 : -1 })
