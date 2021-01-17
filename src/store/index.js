@@ -4,16 +4,6 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  defaultState: {
-    selectedPlanName: "",
-    dateOfHire: "",
-    isDeveloper: false,
-    participatesInFlex: false,
-    flexScheduleType: "full",
-    flexDayReferenceDate: "",
-    plans: [],
-    ptoDates: []
-  },
   state: {
     selectedPlanName: "",
     dateOfHire: "",
@@ -92,10 +82,9 @@ export default new Vuex.Store({
       localStorage.setItem('state', JSON.stringify(state));
 
     },
-    deleteAccount({ commit, state }) {
-      commit('setState', state.defaultState);
+    deleteAccount() {
       localStorage.removeItem('state');
-      
+      location.reload();
     }
   },
   getters: {
