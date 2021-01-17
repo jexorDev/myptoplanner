@@ -9,10 +9,20 @@
         {{ item.date | formatDate }}
       </template>
       <template v-slot:item.type="{ item }">
-        <v-chip :color="getEventColor(item.type)" dark label>
-          <div class="text-uppercase caption" style="width: 130px">
-            {{ getDescription(item.type) }}
-          </div>
+        <div
+          :class="[
+            'text-uppercase',
+            'caption',
+            'font-weight-medium',
+            `${getEventColor(item.type)}--text`,
+          ]"
+        >
+          {{ getDescription(item.type) }}
+        </div>
+      </template>
+      <template v-slot:item.hours="{ item }">
+        <v-chip v-if="item.hours" :color="getEventColor(item.type)" dark label>
+          {{ item.hours }}
         </v-chip>
       </template>
       <template v-slot:item.actions="{ item }">
@@ -33,7 +43,7 @@ export default {
   data: () => ({
     tableHeaders: [
       { text: "Date", value: "date" },
-      { text: "Type", value: "type" },
+      { text: "Type", value: "type", width: "300" },
       { text: "Change", value: "hours", align: "end" },
       { text: "Balance", value: "runningTotal", align: "end" },
       { text: "", value: "actions", width: "200", align: "end" },

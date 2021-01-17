@@ -2,53 +2,19 @@
   <div>
     <v-stepper v-model="step">
       <v-stepper-header>
-        <v-stepper-step :complete="step > 1" step="1"> Welcome </v-stepper-step>
-        <v-divider></v-divider>
-        <v-stepper-step :complete="step > 2" step="2">
+        <v-stepper-step :complete="step > 1" step="1">
           Service Information
         </v-stepper-step>
         <v-divider></v-divider>
-        <v-stepper-step :complete="step > 3" step="3">
+        <v-stepper-step :complete="step > 2" step="2">
           Plan Creation
         </v-stepper-step>
         <v-divider></v-divider>
-        <v-stepper-step :complete="step > 4" step="4"> Review </v-stepper-step>
+        <v-stepper-step :complete="step > 3" step="3"> Review </v-stepper-step>
       </v-stepper-header>
 
       <v-stepper-items>
         <v-stepper-content step="1">
-          <v-row>
-            <v-col>
-              <div class="display-1">Welcome!</div>
-              <div>
-                Since this is your first visit, we will need some information to
-                calculate your PTO before you can begin planning.
-              </div>
-              <div class="mt-2">
-                Note that all of your information will be stored in your
-                browser's storage. It is recommended that you use the
-                export/import functionality to create routine backups in case
-                you erase your browser data.
-              </div>
-              <div class="mt-2">
-                Already have a backup you previously made?
-                <a>Import it here.</a>
-              </div>
-            </v-col>
-          </v-row>
-          <v-row class="mt-4">
-            <v-col class="d-flex justify-space-between">
-              <v-btn color="primary" @click="step--">
-                <v-icon>mdi-chevron-left</v-icon>Previous</v-btn
-              >
-              <v-btn color="primary" @click="step++"
-                >Next<v-icon>mdi-chevron-right</v-icon></v-btn
-              >
-            </v-col>
-          </v-row>
-        </v-stepper-content>
-
-        <v-stepper-content step="2">
           <SetupService
             :dateOfHire.sync="dateOfHire"
             :isDeveloper.sync="isDeveloper"
@@ -68,7 +34,7 @@
           </v-row>
         </v-stepper-content>
 
-        <v-stepper-content step="3">
+        <v-stepper-content step="2">
           <SetupPlan
             :selectedPlanYear.sync="selectedPlanYear"
             :planName.sync="planName"
@@ -89,7 +55,7 @@
           </v-row>
         </v-stepper-content>
 
-        <v-stepper-content step="4">
+        <v-stepper-content step="3">
           <v-row>
             <v-col>
               <div class="headline">{{ planName }}</div>
@@ -155,6 +121,16 @@ export default {
     hoursToRollover: 0,
     bankedHoursFromPriorYear: 0,
   }),
+  mounted: function () {
+    if (this.$store.getters.userInfo.dateOfHire !== "") {
+      this.dateOfHire = this.$store.getters.userInfo.dateOfHire;
+      this.isDeveloper = this.$store.getters.userInfo.isDeveloper;
+      this.participatesInFlex = this.$store.getters.userInfo.participatesInFlex;
+      this.flexScheduleType = this.$store.getters.userInfo.flexScheduleType;
+      this.flexDayReferenceDate = this.$store.getters.userInfo.flexDayReferenceDate;
+      this.step = 2;
+    }
+  },
   computed: {
     hoursWillAccrueForPlanYear() {
       return this.ptoBreakdown === null ? 0 : this.ptoBreakdown.totalHours;
@@ -172,7 +148,11 @@ export default {
       this.$store.dispatch("setUserInfo", {
         dateOfHire: this.dateOfHire,
         isDeveloper: this.isDeveloper,
-        flexDayReferenceDate: this.flexDayReferenceDate,
+        participatesInFlex: this.participatesInFlex,
+        flexScheduleType: this.flexScheduleType,
+        flexDayReferenceDate: moment(this.flexDayReferenceDate).format(
+          "YYYY-MM-DD"
+        ),
       });
       this.$store.dispatch("addPlan", {
         name: this.planName,

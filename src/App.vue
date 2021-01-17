@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app color="primary" dark clipped-left>
-      <div class="d-flex align-center headline">My PTO Planner</div>
+      <div class="d-flex align-center headline">myPTOplanner</div>
 
       <v-spacer></v-spacer>
 
@@ -15,7 +15,7 @@
           class="mt-2"
         >
           <template v-slot:append-item>
-            <v-btn color="primary" text>Add Plan</v-btn>
+            <v-btn color="primary" text to="/add-plan">Add Plan</v-btn>
           </template>
         </v-select>
       </div>

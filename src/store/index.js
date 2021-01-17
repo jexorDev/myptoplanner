@@ -4,10 +4,22 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  defaultState: {
+    selectedPlanName: "",
+    dateOfHire: "",
+    isDeveloper: false,
+    participatesInFlex: false,
+    flexScheduleType: "full",
+    flexDayReferenceDate: "",
+    plans: [],
+    ptoDates: []
+  },
   state: {
     selectedPlanName: "",
     dateOfHire: "",
     isDeveloper: false,
+    participatesInFlex: false,
+    flexScheduleType: "full",
     flexDayReferenceDate: "",
     plans: [],
     ptoDates: []
@@ -16,6 +28,8 @@ export default new Vuex.Store({
     setState(state, payload) {
       state.selectedPlan = payload.plans ? payload.plans[0] : "";
       state.dateOfHire = payload.dateOfHire;
+      state.participatesInFlex = payload.participatesInFlex;
+      state.flexScheduleType = payload.flexScheduleType;
       state.isDeveloper = payload.isDeveloper;
       state.flexDayReferenceDate = payload.flexDayReferenceDate;
       state.plans = [...payload.plans];
@@ -27,6 +41,8 @@ export default new Vuex.Store({
     setUserInfo(state, payload) {
       state.dateOfHire = payload.dateOfHire;
       state.isDeveloper = payload.isDeveloper;
+      state.participatesInFlex = payload.participatesInFlex;
+      state.flexScheduleType = payload.flexScheduleType;
       state.flexDayReferenceDate = payload.flexDayReferenceDate;
     },
     setPlans(state, payload) {
@@ -57,7 +73,7 @@ export default new Vuex.Store({
       localStorage.setItem('state', JSON.stringify(state));
     },
     deletePlan({ commit, state }, payload) {
-      commit('setPlans', [state.plans.filter(plan => plan.name !== payload)]);  
+      commit('setPlans', [...state.plans.filter(plan => plan.name !== payload)]);  
       localStorage.setItem('state', JSON.stringify(state));
     },
     addPtoDates({ commit, state }, payload) {
@@ -76,8 +92,8 @@ export default new Vuex.Store({
       localStorage.setItem('state', JSON.stringify(state));
 
     },
-    deleteAccount({ commit }) {
-      commit('setState', {});
+    deleteAccount({ commit, state }) {
+      commit('setState', state.defaultState);
       localStorage.removeItem('state');
       
     }
@@ -90,7 +106,13 @@ export default new Vuex.Store({
       return state.selectedPlanName === "" ? {} : state.plans.find(plan => plan.name === state.selectedPlanName);
     },
     userInfo: state => {
-      return { dateOfHire: state.dateOfHire, isDeveloper: state.isDeveloper, flexDayReferenceDate: state.flexDayReferenceDate };
+      return {
+        dateOfHire: state.dateOfHire,
+        isDeveloper: state.isDeveloper,
+        participatesInFlex: state.participatesInFlex,
+        flexScheduleType: state.flexScheduleType,
+        flexDayReferenceDate: state.flexDayReferenceDate
+      };
     },
     ptoDates: state => {
       return state.ptoDates.filter(ptoDate => ptoDate.plan === state.selectedPlanName);

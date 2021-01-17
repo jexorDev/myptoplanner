@@ -10,26 +10,23 @@
               text
               small
               color="grey darken-2"
-              class="mr-2"
               @click="prev"
             >
               <v-icon small> mdi-chevron-left </v-icon>
             </v-btn>
-            <v-toolbar-title v-if="$refs.calendar">
-              {{ $refs.calendar.title }}
-            </v-toolbar-title>
-
             <v-btn
               :disabled="!canMoveNextMonth"
               fab
               text
               small
               color="grey darken-2"
-              class="ml-2"
               @click="next"
             >
               <v-icon small> mdi-chevron-right </v-icon>
             </v-btn>
+            <v-toolbar-title v-if="$refs.calendar" class="ml-1">
+              {{ $refs.calendar.title }}
+            </v-toolbar-title>
           </v-toolbar>
         </v-sheet>
         <v-sheet :height="600">

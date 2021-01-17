@@ -133,7 +133,6 @@ export default {
       },
       set(value) {
         this.$emit("update:selectedPlanYear", value);
-        this.setMaxHoursCanRollover();
       },
     },
     planYearNumeric() {

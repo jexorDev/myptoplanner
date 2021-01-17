@@ -1,7 +1,7 @@
 import { getPtoHoursOnDay } from "./employeeInfoCalculator";
 import moment from "moment";
 
-export function getAggregatedEventList(pto, payday, hireDate, planYear, beginningBalance, totalPtoAccrualHours, hoursToRollover) {
+export function getAggregatedEventList(pto, payday, hireDate, planYear, beginningBalance, totalPtoAccrualHours) {
     let eventList = [
         ...pto.map(pto => ({
             type: "usage",
@@ -21,11 +21,14 @@ export function getAggregatedEventList(pto, payday, hireDate, planYear, beginnin
         hours: beginningBalance
     });
 
-    eventList.push({
-        type: "forfeited",
-        date: moment({ month: 11, day: 31, year: planYear, hour: 23, minute: 59 }),
-        hours: Math.min(0, -1 * (totalPtoAccrualHours - hoursToRollover - pto.reduce((acc, value) => { return acc + value.hours }, 0))),
-    });
+    const remainingPlannedUsage = totalPtoAccrualHours - pto.reduce((acc, value) => { return acc + value.hours }, 0);
+    if (remainingPlannedUsage > 40) {
+        eventList.push({
+            type: "forfeited",
+            date: moment({ month: 11, day: 31, year: planYear, hour: 23, minute: 59 }),
+            hours: -1 * (remainingPlannedUsage - 40),
+        });
+    }
     
         eventList.push({
         type: "beginning_next_year",

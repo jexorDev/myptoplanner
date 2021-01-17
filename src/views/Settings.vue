@@ -4,25 +4,30 @@
     <SetupService
       :dateOfHire.sync="dateOfHire"
       :isDeveloper.sync="isDeveloper"
+      :participatesInFlex.sync="participatesInFlex"
+      :flexScheduleType.sync="flexScheduleType"
       :flexDayReferenceDate.sync="flexDayReferenceDate"
     ></SetupService>
     <v-row>
-      <v-btn color="red" text @click="deleteAccount">Delete Account</v-btn>
+      <v-col>
+        <v-btn color="red" text @click="deleteAccount">Delete Account</v-btn>
+      </v-col>
+      <v-col class="d-flex justify-end mr-5">
+        <v-btn
+          color="primary"
+          @click="saveServiceInfoChanges"
+          :disabled="serviceButtonsDisabled"
+          >Save</v-btn
+        >
+        <v-btn
+          text
+          @click="cancelServiceInfoChanges"
+          :disabled="serviceButtonsDisabled"
+          >Cancel</v-btn
+        >
+      </v-col>
     </v-row>
-    <div class="mt-3">
-      <v-btn
-        color="primary"
-        @click="saveServiceInfoChanges"
-        :disabled="serviceButtonsDisabled"
-        >Save</v-btn
-      >
-      <v-btn
-        text
-        @click="cancelServiceInfoChanges"
-        :disabled="serviceButtonsDisabled"
-        >Cancel</v-btn
-      >
-    </div>
+
     <v-divider class="mt-3 mb-3"></v-divider>
     <div class="display-1 headline">Plan Information</div>
     <SetupPlan
@@ -34,19 +39,25 @@
       :isPlanYearDisabled="true"
     ></SetupPlan>
     <v-row>
-      <v-btn color="red" text @click="deletePlan">Delete Plan</v-btn>
+      <v-col>
+        <v-btn color="red" text @click="deletePlan">Delete Plan</v-btn>
+      </v-col>
+      <v-col class="d-flex justify-end mr-5">
+        <v-btn
+          color="primary"
+          @click="savePlanInfoChanges"
+          :disabled="planButtonsDisabled"
+          >Save</v-btn
+        >
+        <v-btn
+          text
+          @click="cancelPlanInfoChanges"
+          :disabled="planButtonsDisabled"
+          >Cancel</v-btn
+        >
+      </v-col>
     </v-row>
-    <div class="mt-3">
-      <v-btn
-        color="primary"
-        @click="savePlanInfoChanges"
-        :disabled="planButtonsDisabled"
-        >Save</v-btn
-      >
-      <v-btn text @click="cancelPlanInfoChanges" :disabled="planButtonsDisabled"
-        >Cancel</v-btn
-      >
-    </div>
+
     <v-divider class="mt-3 mb-3"></v-divider>
 
     <v-dialog v-model="showUnsavedChangesDialog" persistent max-width="500">
@@ -83,6 +94,10 @@ export default {
     oldDateOfHire: "",
     isDeveloper: false,
     oldIsDeveloper: false,
+    participatesInFlex: false,
+    oldParticipatesInFlex: false,
+    flexScheduleType: "full",
+    oldFlexScheduleType: "full",
     flexDayReferenceDate: "",
     oldFlexDayReferenceDate: "",
     hoursToRollover: 0,
@@ -104,6 +119,10 @@ export default {
       this.oldDateOfHire = this.dateOfHire;
       this.isDeveloper = this.$store.getters.userInfo.isDeveloper;
       this.oldIsDeveloper = this.isDeveloper;
+      this.participatesInFlex = this.$store.getters.userInfo.participatesInFlex;
+      this.oldParticipatesInFlex = this.participatesInFlex;
+      this.flexScheduleType = this.$store.getters.userInfo.flexScheduleType;
+      this.oldFlexScheduleType = this.flexScheduleType;
       this.flexDayReferenceDate = this.$store.getters.userInfo.flexDayReferenceDate;
       this.oldFlexDayReferenceDate = this.flexDayReferenceDate;
 
@@ -125,16 +144,22 @@ export default {
       this.$store.dispatch("setUserInfo", {
         dateOfHire: this.dateOfHire,
         isDeveloper: this.isDeveloper,
+        participatesInFlex: this.participatesInFlex,
+        flexScheduleType: this.flexScheduleType,
         flexDayReferenceDate: this.flexDayReferenceDate,
       });
 
       this.oldDateOfHire = this.dateOfHire;
       this.oldIsDeveloper = this.isDeveloper;
+      this.oldParticipatesInFlex = this.participatesInFlex;
+      this.oldFlexScheduleType = this.flexScheduleType;
       this.oldFlexDayReferenceDate = this.flexDayReferenceDate;
     },
     cancelServiceInfoChanges() {
       this.dateOfHire = this.oldDateOfHire;
       this.isDeveloper = this.oldIsDeveloper;
+      this.participatesInFlex = this.oldParticipatesInFlex;
+      this.flexScheduleType = this.oldFlexScheduleType;
       this.flexDayReferenceDate = this.oldFlexDayReferenceDate;
     },
     savePlanInfoChanges() {
@@ -152,6 +177,8 @@ export default {
       this.oldPlanName = this.planName;
       this.oldHoursToRollover = this.hoursToRollover;
       this.oldBankedHoursFromPriorYear = this.bankedHoursFromPriorYear;
+
+      this.$store.dispatch("setSelectedPlanName", this.planName);
     },
     cancelPlanInfoChanges() {
       this.planName = this.oldPlanName;
@@ -159,11 +186,22 @@ export default {
       this.bankedHoursFromPriorYear = this.oldBankedHoursFromPriorYear;
     },
     deletePlan() {
-      this.$store.dispatch("deletePlan", this.oldPlanName);
-      if (this.$store.state.plans.length > 0) {
-        this.$store.dispatch("setSelectedPlan", this.$store.state.plans[0]);
+      if (
+        this.$store.state.plans.filter((plan) => plan.name !== this.oldPlanName)
+          .length > 0
+      ) {
+        this.$store.dispatch(
+          "setSelectedPlanName",
+          this.$store.state.plans.filter(
+            (plan) => plan.name !== this.oldPlanName
+          )[0].name
+        );
+        this.$store.dispatch("deletePlan", this.oldPlanName);
+        this.intiializeFields();
       } else {
-        this.$router.push({ route: "/start" });
+        this.$store.dispatch("deletePlan", this.oldPlanName);
+
+        this.$router.push("/start");
       }
     },
     deleteAccount() {
@@ -176,6 +214,8 @@ export default {
       return (
         this.dateOfHire === this.oldDateOfHire &&
         this.isDeveloper === this.oldIsDeveloper &&
+        this.participatesInFlex === this.oldParticipatesInFlex &&
+        this.flexScheduleType === this.oldFlexScheduleType &&
         this.flexDayReferenceDate === this.oldFlexDayReferenceDate
       );
     },
@@ -186,13 +226,21 @@ export default {
         this.hoursToRollover === this.oldHoursToRollover
       );
     },
+    selectedPlanName() {
+      return this.$store.getters.selectedPlanName;
+    },
   },
   beforeRouteLeave(to, from, next) {
-    if (!this.serviceButtonsDisabled) {
+    if (!this.serviceButtonsDisabled || !this.planButtonsDisabled) {
       this.showUnsavedChangesDialog = true;
       return;
     }
     next();
+  },
+  watch: {
+    selectedPlanName() {
+      this.intiializeFields();
+    },
   },
 };
 </script>
