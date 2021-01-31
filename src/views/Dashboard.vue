@@ -30,13 +30,23 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="4">
+      <v-col cols="6">
         <v-card class="dashboard-card">
           <v-card-title class="headline d-flex justify-center">
             Balance over time
           </v-card-title>
           <v-card-text>
             <WidgetBalanceOverTime></WidgetBalanceOverTime>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="6">
+        <v-card class="dashboard-card">
+          <v-card-title class="headline d-flex justify-center">
+            Usage by month
+          </v-card-title>
+          <v-card-text>
+            <WidgetUsageByMonth></WidgetUsageByMonth>
           </v-card-text>
         </v-card>
       </v-col>
@@ -48,6 +58,7 @@ import WidgetHoursRemaining from "@/components/widgets/WidgetHoursRemaining";
 import WidgetRolloverHoursRemaining from "@/components/widgets/WidgetRolloverHoursRemaining";
 import WidgetNextYearBanked from "@/components/widgets/WidgetNextYearBanked";
 import WidgetBalanceOverTime from "@/components/widgets/WidgetBalanceOverTime";
+import WidgetUsageByMonth from "@/components/widgets/WidgetUsageByMonth";
 
 export default {
   name: "Dashboard",
@@ -56,6 +67,7 @@ export default {
     WidgetRolloverHoursRemaining,
     WidgetNextYearBanked,
     WidgetBalanceOverTime,
+    WidgetUsageByMonth,
   },
 };
 </script>
