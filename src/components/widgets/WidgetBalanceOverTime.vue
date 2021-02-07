@@ -20,7 +20,10 @@ export default {
     balanceByMonth() {
       return getAggregatedEventList(
         this.$store.getters.ptoDates,
-        getPayDays(this.$store.getters.selectedPlan.year),
+        getPayDays(
+          this.$store.getters.selectedPlan.year,
+          this.$store.getters.userInfo.dateOfHire
+        ),
         this.$store.getters.userInfo.dateOfHire,
         this.$store.getters.selectedPlan.year,
         this.$store.getters.selectedPlan.hoursBankedPrior

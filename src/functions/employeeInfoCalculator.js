@@ -2,30 +2,31 @@ import moment from 'moment';
 
 export function getEmployeeInYear(hireDate, onDate) {
     const momentHireDate = moment(hireDate);
-      const momentOnDate = moment(onDate);
+    const momentOnDate = moment(onDate);
 
-      const serviceYears = moment
+    const serviceYears = moment
         .duration(momentOnDate.diff(momentHireDate))
         .asYears();
-      return Math.floor(serviceYears) + 1;
+    
+    return Math.floor(serviceYears) + 1;
 }
 
 export function getHoursPerPay(inYear) {
-      let ptoHoursPerPay = 5;
+    let ptoHoursPerPay = 5;
 
-     if (inYear > 2) {
+    if (inYear > 2) {
         ptoHoursPerPay = 6;
-      }
-      if (inYear > 4) {
+    }
+    if (inYear > 4) {
         ptoHoursPerPay = 7;
-      }
-      if (inYear > 6) {
+    }
+    if (inYear > 6) {
         ptoHoursPerPay = 8;
-      }
-      if (inYear > 10) {
+    }
+    if (inYear > 10) {
         ptoHoursPerPay = 9;
-      }
-      if (inYear > 14) {
+    }
+    if (inYear > 14) {
         ptoHoursPerPay = 10;
     }
     
@@ -33,10 +34,13 @@ export function getHoursPerPay(inYear) {
 }
 
 export function getPtoBreakdown(hireDate, planYear) {
+
     const momentHireDate = moment(hireDate);
     const planYearInt = parseInt(planYear);
+
     let ptoIncreaseMonth = momentHireDate.month();
-    if (momentHireDate.day() > 1) {
+
+    if (momentHireDate.date() > 1) {
         ptoIncreaseMonth += 1;
 
         if (ptoIncreaseMonth > 12) {
@@ -46,7 +50,7 @@ export function getPtoBreakdown(hireDate, planYear) {
 
     const ptoIncreaseDate = moment({ month: ptoIncreaseMonth, day: 1, year: planYearInt });
     
-    const inYearPriorAnniversary = getEmployeeInYear(momentHireDate, moment({ month: momentHireDate.month(),day: momentHireDate.day() -1, year: planYearInt }));
+    const inYearPriorAnniversary = getEmployeeInYear(momentHireDate, moment({ month: momentHireDate.month(),day: momentHireDate.date() -1, year: planYearInt }));
     const inYearAfterAnniversary = getEmployeeInYear(momentHireDate, ptoIncreaseDate);
 
     
@@ -58,7 +62,24 @@ export function getPtoBreakdown(hireDate, planYear) {
 
     let breakdown = [];
 
-    if (ptoHoursPerPayPriorAnniversary === ptoHoursPerPayAfterAnniversary) {
+    if (moment().year() === momentHireDate.year()) {
+        let ptoAccrualHours = ptoHoursPerPayPriorAnniversary;
+        if (momentHireDate.month() < 12) {
+            ptoAccrualHours += 2 * (12 - (momentHireDate.month() + 1)) * ptoHoursPerPayPriorAnniversary;
+        }
+        if (momentHireDate.date() < 15) {
+            ptoAccrualHours += ptoHoursPerPayPriorAnniversary;
+        }
+
+         breakdown.push({
+                dateStart: moment({ month: momentHireDate.month, day: momentHireDate.day, year: planYearInt }),
+                dateEnd: moment({ month: 11, day: 31, year: planYearInt }),
+                ptoHoursPerPay: ptoHoursPerPayPriorAnniversary,
+                totalPtoHours: ptoAccrualHours
+         });
+        console.log(breakdown)
+        
+    } else if (ptoHoursPerPayPriorAnniversary === ptoHoursPerPayAfterAnniversary) {
         //no change in accrual this year
         breakdown.push({
             dateStart: moment({ month: 0, day: 1, year: planYearInt }),

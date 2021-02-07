@@ -150,7 +150,8 @@ export default {
         ? getTotalPtoHours(
             getPtoDayForSingle(
               this.singleEntryDate,
-              this.$store.getters.userInfo.isDeveloper,
+              this.$store.getters.userInfo.participatesInFlex,
+              this.$store.getters.userInfo.flexScheduleType,
               this.singleEntryIsAllDay,
               parseFloat(this.singleEntryHours)
             )
@@ -159,7 +160,8 @@ export default {
             getPtoDaysForRange(
               this.groupEntryStartDate,
               this.groupEntryEndDate,
-              this.$store.getters.userInfo.isDeveloper
+              this.$store.getters.userInfo.participatesInFlex,
+              this.$store.getters.userInfo.flexScheduleType
             )
           );
     },
@@ -170,7 +172,8 @@ export default {
       if (this.entryType === "single") {
         ptoDays = getPtoDayForSingle(
           this.singleEntryDate,
-          this.$store.getters.userInfo.isDeveloper,
+          this.$store.getters.userInfo.participatesInFlex,
+          this.$store.getters.userInfo.flexScheduleType,
           this.singleEntryIsAllDay,
           parseFloat(this.singleEntryHours)
         );
@@ -178,7 +181,8 @@ export default {
         ptoDays = getPtoDaysForRange(
           this.groupEntryStartDate,
           this.groupEntryEndDate,
-          this.$store.getters.userInfo.isDeveloper
+          this.$store.getters.userInfo.participatesInFlex,
+          this.$store.getters.userInfo.flexScheduleType
         );
       }
 

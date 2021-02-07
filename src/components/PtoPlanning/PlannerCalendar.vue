@@ -87,7 +87,7 @@ export default {
   },
   mounted() {
     this.$refs.calendar.checkChange();
-    this.focus = moment().format("YYYY-MM-DD");
+    this.setSelectedDate();
   },
   computed: {
     events: function () {
@@ -112,13 +112,6 @@ export default {
           color: "blue",
           timed: false,
           type: "flex",
-        })),
-        ...this.payDays.map((payDay) => ({
-          name: "Add",
-          start: payDay,
-          color: "green",
-          timed: false,
-          type: "add",
         })),
       ];
     },
@@ -167,10 +160,23 @@ export default {
 
       nativeEvent.stopPropagation();
     },
+    setSelectedDate() {
+      if (moment().year() === this.planYear) {
+        this.focus = moment().format("YYYY-MM-DD");
+      } else {
+        this.focus = moment({ month: 0, day: 1, year: this.planYear }).format(
+          "YYYY-MM-DD"
+        );
+      }
+    },
   },
   watch: {
     focus() {
       this.$emit("focus-changed", this.focus);
+    },
+    planYear() {
+      console.log("log");
+      this.setSelectedDate();
     },
   },
 };

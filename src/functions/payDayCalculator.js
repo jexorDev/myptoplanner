@@ -1,9 +1,10 @@
 import moment from "moment";
 import { getNextBusinessDay } from "./dateHelpers";
 
-export function getPayDays(year) {
+export function getPayDays(year, hireDate) {
     if (!year) return;
     year = parseInt(year);
+    const momentHireDate = moment(hireDate);
 
     let payDays = [];
 
@@ -16,5 +17,10 @@ export function getPayDays(year) {
         
     }
 
-    return payDays;
+    if (moment().year() === momentHireDate.year()) {
+        //TODO: this can probably be the single return statement
+        return payDays.filter(x => moment(x).isAfter(momentHireDate));
+    } else {
+        return payDays;
+    }
 }
