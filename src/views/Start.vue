@@ -44,7 +44,29 @@
         >
       </v-col>
       <v-col cols="7">
-        <v-img src="/assets/landing-info-planner.PNG"></v-img>
+        <v-carousel cycle show-arrows-on-hover hide-delimiters :interval="3000">
+          <v-carousel-item transition="fade-transition">
+            <v-sheet height="100%" tile>
+              <v-row class="fill-height" align="center" justify="center">
+                <v-img src="/assets/landing-info-calendar.PNG"></v-img>
+              </v-row>
+            </v-sheet>
+          </v-carousel-item>
+          <v-carousel-item transition="fade-transition">
+            <v-sheet height="100%" tile>
+              <v-row class="fill-height" align="center" justify="center">
+                <v-img src="/assets/landing-info-list.PNG"></v-img>
+              </v-row>
+            </v-sheet>
+          </v-carousel-item>
+          <v-carousel-item transition="fade-transition">
+            <v-sheet height="100%" tile>
+              <v-row class="fill-height" align="center" justify="center">
+                <v-img src="/assets/landing-info-dashboard.PNG"></v-img>
+              </v-row>
+            </v-sheet>
+          </v-carousel-item>
+        </v-carousel>
       </v-col>
     </v-row>
   </div>
