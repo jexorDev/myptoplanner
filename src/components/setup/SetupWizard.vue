@@ -108,7 +108,7 @@ export default {
   },
   data: () => ({
     step: 1,
-    dateOfHire: moment({ month: 3, day: 18, year: 2015 })
+    dateOfHire: moment({ month: 3, date: 18, year: 2015 })
       .toISOString()
       .substring(0, 10),
     isDeveloper: false,

@@ -164,7 +164,7 @@ export default {
       if (moment().year() === this.planYear) {
         this.focus = moment().format("YYYY-MM-DD");
       } else {
-        this.focus = moment({ month: 0, day: 1, year: this.planYear }).format(
+        this.focus = moment({ month: 0, date: 1, year: this.planYear }).format(
           "YYYY-MM-DD"
         );
       }

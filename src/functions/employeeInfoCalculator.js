@@ -48,9 +48,9 @@ export function getPtoBreakdown(hireDate, planYear) {
         }
     }
 
-    const ptoIncreaseDate = moment({ month: ptoIncreaseMonth, day: 1, year: planYearInt });
+    const ptoIncreaseDate = moment({ month: ptoIncreaseMonth, date: 1, year: planYearInt });
     
-    const inYearPriorAnniversary = getEmployeeInYear(momentHireDate, moment({ month: momentHireDate.month(),day: momentHireDate.date() -1, year: planYearInt }));
+    const inYearPriorAnniversary = getEmployeeInYear(momentHireDate, moment({ month: momentHireDate.month(),date: momentHireDate.date(), year: planYearInt }).subtract(1, 'days'));
     const inYearAfterAnniversary = getEmployeeInYear(momentHireDate, ptoIncreaseDate);
 
     
@@ -72,8 +72,8 @@ export function getPtoBreakdown(hireDate, planYear) {
         }
 
          breakdown.push({
-                dateStart: moment({ month: momentHireDate.month, day: momentHireDate.day, year: planYearInt }),
-                dateEnd: moment({ month: 11, day: 31, year: planYearInt }),
+                dateStart: moment({ month: momentHireDate.month, date: momentHireDate.date, year: planYearInt }),
+                dateEnd: moment({ month: 11, date: 31, year: planYearInt }),
                 ptoHoursPerPay: ptoHoursPerPayPriorAnniversary,
                 totalPtoHours: ptoAccrualHours
          });
@@ -82,22 +82,22 @@ export function getPtoBreakdown(hireDate, planYear) {
     } else if (ptoHoursPerPayPriorAnniversary === ptoHoursPerPayAfterAnniversary) {
         //no change in accrual this year
         breakdown.push({
-            dateStart: moment({ month: 0, day: 1, year: planYearInt }),
-            dateEnd: moment({ month: 11, day: 31, year: planYearInt }),
+            dateStart: moment({ month: 0, date: 1, year: planYearInt }),
+            dateEnd: moment({ month: 11, date: 31, year: planYearInt }),
             ptoHoursPerPay: ptoHoursPerPayPriorAnniversary,
             totalPtoHours: totalPtoHoursPriorAnniversary + totalPtoHoursAfterAnniversary
         });
     }
     else {
         breakdown.push({
-            dateStart: moment({ month: 0, day: 1, year: planYearInt }),
+            dateStart: moment({ month: 0, date: 1, year: planYearInt }),
             dateEnd: moment(ptoIncreaseDate).add(-1, 'day'),
             ptoHoursPerPay: ptoHoursPerPayPriorAnniversary,
             totalPtoHours: totalPtoHoursPriorAnniversary
         });
          breakdown.push({
             dateStart: ptoIncreaseDate,
-            dateEnd: moment({ month: 11, day: 31, year: planYearInt }),
+            dateEnd: moment({ month: 11, date: 31, year: planYearInt }),
             ptoHoursPerPay: ptoHoursPerPayAfterAnniversary,
             totalPtoHours: totalPtoHoursAfterAnniversary
         });

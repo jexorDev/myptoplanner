@@ -9,12 +9,12 @@ export function getPayDays(year, hireDate) {
     let payDays = [];
 
     for (let month = 0; month < 12; month++) {
-        const midPayDay = getNextBusinessDay(moment({ month: month, day: 15, year: year }), 'previous');       
+        const midPayDay = getNextBusinessDay(moment({ month: month, date: 15, year: year }), 'previous');
         payDays.push(midPayDay.format("YYYY-MM-DD"));
 
-        const monthEndPayDay = getNextBusinessDay(moment({ month: month, day: 1, year: year }).endOf("month"), 'previous');
+        const monthEndPayDay = getNextBusinessDay(moment({ month: month, date: 1, year: year }).endOf("month"), 'previous');
         payDays.push(monthEndPayDay.format("YYYY-MM-DD"));
-        
+
     }
 
     if (moment().year() === momentHireDate.year()) {
