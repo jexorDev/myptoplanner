@@ -17,7 +17,7 @@ export function getAggregatedEventList(pto, payday, hireDate, planYear, beginnin
 
     eventList.push({
         type: "beginning",
-        date: moment({ month: 0, day: 1, year: planYear }),
+        date: moment({ month: 0, date: 1, year: planYear }),
         hours: beginningBalance
     });
 
@@ -25,14 +25,14 @@ export function getAggregatedEventList(pto, payday, hireDate, planYear, beginnin
     if (remainingPlannedUsage > 40) {
         eventList.push({
             type: "forfeited",
-            date: moment({ month: 11, day: 31, year: planYear, hour: 23, minute: 59 }),
+            date: moment({ month: 11, date: 31, year: planYear, hour: 23, minute: 59 }),
             hours: -1 * (remainingPlannedUsage - 40),
         });
     }
-    
+
         eventList.push({
         type: "beginning_next_year",
-        date: moment({ month: 0, day: 1, year: (parseInt(planYear) + 1) }),
+        date: moment({ month: 0, date: 1, year: (parseInt(planYear) + 1) }),
         hours: null,
     });
 
