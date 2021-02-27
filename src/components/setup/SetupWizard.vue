@@ -23,10 +23,8 @@
             :flexDayReferenceDate.sync="flexDayReferenceDate"
           ></SetupService>
           <v-row class="mt-4">
-            <v-col class="d-flex justify-space-between">
-              <v-btn color="primary" @click="step--">
-                <v-icon>mdi-chevron-left</v-icon>Previous</v-btn
-              >
+            <v-col class="d-flex justify-end">
+
               <v-btn color="primary" @click="step++"
                 >Next<v-icon>mdi-chevron-right</v-icon></v-btn
               >
@@ -108,7 +106,7 @@ export default {
   },
   data: () => ({
     step: 1,
-    dateOfHire: moment({ month: 3, day: 18, year: 2015 })
+    dateOfHire: moment({ month: 3, date: 18, year: 2015 })
       .toISOString()
       .substring(0, 10),
     isDeveloper: false,

@@ -1,4 +1,4 @@
-import { getFlexDays } from "@/functions/flexDayCalculator";
+import { getFlexDaysFullScheduleType, getFlexDaysHalfScheduleType } from "@/functions/flexDayCalculator";
 import { getPayDays } from "@/functions/payDayCalculator";
 import { getPtoBreakdown } from "@/functions/employeeInfoCalculator";
 import { getHolidays } from "@/functions/holidayCalculator";
@@ -10,14 +10,19 @@ export default {
             return this.$store.getters.ptoDates;
         },
         flexDays() {
-            return getFlexDays(this.$store.getters.userInfo.flexDayReferenceDate);
+            return this.$store.getters.userInfo.participatesInFlex
+                ? this.$store.getters.userInfo.flexScheduleType === "full"
+                    ? getFlexDaysFullScheduleType(this.$store.getters.userInfo.flexDayReferenceDate, this.$store.getters.selectedPlan.year)
+                    : getFlexDaysHalfScheduleType(this.$store.getters.selectedPlan.year)
+                : [];
         },
         holidays() {
             return getHolidays(this.$store.getters.selectedPlan.year);
         },
         payDays() {
             return getPayDays(
-                this.$store.getters.selectedPlan.year
+                this.$store.getters.selectedPlan.year,
+                this.$store.getters.userInfo.dateOfHire
             );
         },
         totalPtoPlanned() {

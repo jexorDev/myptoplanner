@@ -1,6 +1,6 @@
 import moment from "moment";
 
-function getPtoDays(fromDate, toDate, isDeveloper, holidays, flexDays) {
+function getPtoDays(fromDate, toDate, participatesInFlex, flexScheduleType, holidays, flexDays) {
     const momentFromDate = moment(fromDate);
     const momentToDate = moment(toDate);
     let ptoDays = [];
@@ -10,16 +10,20 @@ function getPtoDays(fromDate, toDate, isDeveloper, holidays, flexDays) {
         if (holidays.filter(x => x === currentDate.format("YYYY-MM-DD")).length > 0) continue;
         if (flexDays.filter(x => x === currentDate.format("YYYY-MM-DD")).length > 0) continue;
         
-        ptoDays.push({date: currentDate.format("YYYY-MM-DD"), hours: getFullDayPtoHours(currentDate, isDeveloper) });
+        ptoDays.push({date: currentDate.format("YYYY-MM-DD"), hours: getFullDayPtoHours(currentDate, participatesInFlex, flexScheduleType) });
     }
 
     return ptoDays;
 }
 
-function getFullDayPtoHours(day, isDeveloper) {
-     if (isDeveloper) {
+function getFullDayPtoHours(day, participatesInFlex, flexScheduleType) {
+    if (participatesInFlex) {
         if (moment(day).day() === 5) {
-            return 8;
+            if (flexScheduleType === "full") {
+                return 8;
+            } else {
+                return 4;
+            }
         } else {
             return 9;
         }
@@ -40,15 +44,15 @@ export function getTotalPtoHours(ptoDays) {
     return totalPtoHours;
 }
 
-export function getPtoDaysForRange(fromDate, toDate, isDeveloper) {
-    return getPtoDays(fromDate, toDate, isDeveloper, [], []);
+export function getPtoDaysForRange(fromDate, toDate, participatesInFlex, flexScheduleType) {
+    return getPtoDays(fromDate, toDate, participatesInFlex, flexScheduleType, [], []);
 }
 
-export function getPtoDayForSingle(date, isDeveloper, isAllDay, customHourEntry) {
+export function getPtoDayForSingle(date, participatesInFlex, flexScheduleType, isAllDay, customHourEntry) {
     if (!isAllDay) {
         return [{ date: moment(date).format("YYYY-MM-DD"), hours: customHourEntry }];
     } else {
-        return getPtoDays(date, date, isDeveloper, [], []);
+        return getPtoDays(date, date, participatesInFlex, flexScheduleType, [], []);
     }
 
 }

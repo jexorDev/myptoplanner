@@ -4,7 +4,7 @@ import { getNextBusinessDay } from "./dateHelpers";
 export function getHolidays(planYear) {
     let holidays = [];
 
-    const newYears = getNextBusinessDay(moment(`${planYear}-01-01`), 'previous');
+    const newYears = getNextBusinessDay(moment(`${planYear}-01-01`), 'next');
     holidays.push({description: "New Year's", date: newYears.format("YYYY-MM-DD")});
 
     const memorialDay = getNextBusinessDay(moment(`${planYear}-05-01`).endOf('month'), 'previous', 1);
@@ -25,6 +25,12 @@ export function getHolidays(planYear) {
 
     const christmasDay = getNextBusinessDay(moment(`${planYear}-12-25`), 'next');
     holidays.push({ description: "Christmas Day", date: christmasDay.format("YYYY-MM-DD") });
+
+    const newYearsNextYear = getNextBusinessDay(moment(`${parseInt(planYear) + 1}-01-01`), 'previous');
+    if (newYearsNextYear.year() === parseInt(planYear)) {
+        //next year's new year's is on a weekend and moves company holiday to current plan year
+        holidays.push({description: "New Year's", date: newYearsNextYear.format("YYYY-MM-DD")});
+    }
 
     return holidays;
 }

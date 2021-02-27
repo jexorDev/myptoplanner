@@ -48,14 +48,25 @@ export default {
       }
     },
     remainingRolloverHoursPercent() {
-      return this.$store.getters.selectedPlan.hoursToRollover > 0
-        ? (this.remainingRolloverHours /
+      if (this.$store.getters.selectedPlan.hoursToRollover > 0) {
+        return (
+          (this.remainingRolloverHours /
             this.$store.getters.selectedPlan.hoursToRollover) *
-            100
-        : 0;
+          100
+        );
+      } else {
+        return (
+          (Math.min(this.totalPtoAccrualHours - this.totalPtoPlanned, 40) /
+            40) *
+          100
+        );
+      }
     },
     showChangeRolloverAmountMessage() {
-      return this.remainingRolloverHoursPercent !== 100;
+      return (
+        this.$store.getters.selectedPlan.hoursToRollover > 0 &&
+        this.remainingRolloverHoursPercent !== 100
+      );
     },
   },
 };
