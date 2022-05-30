@@ -84,8 +84,23 @@
         </v-list>
       </template>
     </v-navigation-drawer>
+
+
+
+
+   
+
     <v-main class="ml-3">
       <v-container fluid>
+ <v-alert
+      dismissible
+      elevation="2"
+      colored-border
+      icon="mdi-cards-heart-outline"
+    >
+      A new version of myPTOplanner is here! <a href="https://myptoplannerv2.herokuapp.com/">Switch Now</a>
+    </v-alert>
+
         <router-view></router-view>
       </v-container>
     </v-main>
@@ -94,6 +109,7 @@
     ></DialogGoogleFormFeedback>
     <DialogGoogleFormReportBug :show.sync="showReportBugDialog">
     </DialogGoogleFormReportBug>
+    
   </v-app>
 </template>
 
@@ -110,6 +126,7 @@ export default {
   data: () => ({
     showFeedbackDialog: false,
     showReportBugDialog: false,
+    newVersionAlert: true
   }),
   computed: {
     plans() {
